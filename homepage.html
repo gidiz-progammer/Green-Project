@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Home - Oni Christianah Folashade</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f9fdfb;
+      color: #004d40;
+    }
+    header {
+      background: #009688;
+      padding: 2rem 2rem 4rem;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      animation: fadeIn 1.5s ease forwards;
+    }
+    nav {
+      margin-top: 2rem;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 1.2rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: color 0.3s ease;
+    }
+    nav a:hover {
+      text-decoration: underline;
+      color: #004d40;
+      background: #b2dfdb;
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+    }
+    nav a.active {
+      border-bottom: 3px solid #004d40;
+      font-weight: 700;
+    }
+
+    /* Distributor Label */
+    .distributor-label {
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: #004d40;
+      background: #a5d6a7;
+      padding: 0.4rem 1.2rem;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      margin-bottom: 0.6rem;
+      user-select: none;
+      animation: glowPulse 4s infinite alternate ease-in-out;
+    }
+    .leaf-icon {
+      margin-right: 0.5rem;
+      font-size: 1.4rem;
+    }
+    @keyframes glowPulse {
+      0% {
+        box-shadow: 0 0 5px #81c784;
+      }
+      100% {
+        box-shadow: 0 0 18px #388e3c;
+      }
+    }
+
+    /* Animated border around the name */
+    .name-container {
+      border: 3px solid transparent;
+      padding: 1.2rem 3rem;
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: #004d40;
+      background: white;
+      border-radius: 15px;
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+      box-shadow: 0 0 15px rgba(0, 77, 64, 0.3);
+      animation: borderPulse 3s infinite alternate;
+      user-select: none;
+    }
+    .name-container::before {
+      content: "";
+      position: absolute;
+      top: -5px; left: -5px; right: -5px; bottom: -5px;
+      border: 3px solid #004d40;
+      border-radius: 20px;
+      opacity: 0.7;
+      animation: borderGlow 3s infinite alternate;
+      pointer-events: none;
+      z-index: -1;
+    }
+    @keyframes borderGlow {
+      0% {
+        box-shadow: 0 0 10px #004d40, 0 0 15px #00796b;
+        opacity: 0.8;
+      }
+      100% {
+        box-shadow: 0 0 25px #004d40, 0 0 35px #009688;
+        opacity: 0.4;
+      }
+    }
+    @keyframes borderPulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 15px rgba(0, 77, 64, 0.3);
+      }
+      100% {
+        transform: scale(1.05);
+        box-shadow: 0 0 25px rgba(0, 77, 64, 0.5);
+      }
+    }
+    @keyframes fadeIn {
+      0% {opacity: 0; transform: translateY(-15px);}
+      100% {opacity: 1; transform: translateY(0);}
+    }
+
+    /* Tagline */
+    .tagline {
+      margin-top: 0.5rem;
+      font-weight: 600;
+      color: #1e1f1f;
+      font-size: 1rem;
+      font-style: italic;
+      user-select: none;
+      opacity: 0.85;
+    }
+
+    main {
+      max-width: 900px;
+      margin: auto;
+      padding: 2rem 1rem 4rem;
+    }
+    section {
+      margin-bottom: 3rem;
+      background: white;
+      padding: 2rem 2rem;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      color: #004d40;
+    }
+    h2 {
+      margin-top: 0;
+      border-bottom: 3px solid #009688;
+      padding-bottom: 0.4rem;
+    }
+    p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-top: 0.6rem;
+    }
+
+    /* Featured Products preview */
+    .featured-products {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .product-card {
+      flex: 1 1 30%;
+      background: #e0f2f1;
+      border-radius: 15px;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 77, 64, 0.15);
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      user-select: none;
+    }
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 6px 20px rgba(0, 77, 64, 0.3);
+    }
+    .product-card h3 {
+      margin-top: 0;
+      color: #004d40;
+    }
+    .product-card p {
+      font-size: 1rem;
+      color: #00695c;
+    }
+
+    /* Testimonials teaser */
+    .testimonial {
+      font-style: italic;
+      border-left: 4px solid #009688;
+      padding-left: 1rem;
+      color: #004d40;
+      margin-bottom: 1rem;
+      user-select: none;
+    }
+    .testimonial-author {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #00796b;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="distributor-label">
+      <span class="leaf-icon">🍃</span> Green World Distributor
+    </div>
+    <div class="name-container">
+      Oni Christianah Folashade
+    </div>
+    <div class="tagline">
+      Official Shop Owner - Ore, Ondo
+    </div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="productpage.html">Products</a>
+      <a href="aboutpage.html">About</a>
+      <a href="contactpage.html">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Welcome</h2>
+      <p>
+        Welcome to the official website of Oni Christianah Folashade, your trusted Green World Distributor and Shop Owner in Ore, Ondo. Explore our range of natural and herbal products designed to promote your health and well-being.
+      </p>
+    </section>
+
+    <section>
+      <h2>Featured Products</h2>
+      <div class="featured-products">
+        <div class="product-card" onclick="window.location.href='products.html'">
+          <h3>Green Tea</h3>
+          <p>Boost your metabolism and immunity naturally.</p>
+        </div>
+        <div class="product-card" onclick="window.location.href='products.html'">
+          <h3>Herbal Supplements</h3>
+          <p>Support your wellness every day with natural ingredients.</p>
+        </div>
+        <div class="product-card" onclick="window.location.href='products.html'">
+          <h3>Detox Capsules</h3>
+          <p>Cleanse your body naturally and feel refreshed.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>What Our Customers Say</h2>
+      <div class="testimonial">
+        "Amazing products and fast delivery! My health has improved so much."
+        <div class="testimonial-author">- Adeola M.</div>
+      </div>
+      <div class="testimonial">
+        "I trust Oni Christianah Folashade for all my herbal needs. Highly recommend!"
+        <div class="testimonial-author">- Kunle A.</div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
