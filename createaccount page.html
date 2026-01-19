@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Green World | Create Account</title>
+  <link rel="stylesheet" href="auth.css">
+</head>
+<style>
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  height: 100vh;
+  background: linear-gradient(
+    rgba(0, 90, 40, 0.7),
+    rgba(0, 90, 40, 0.7)
+  ),
+  url("https://images.unsplash.com/photo-1501004318641-b39e6451bec6");
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-container,
+.register-container {
+  background: white;
+  width: 330px;
+  padding: 40px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+h1 {
+  color: #2e7d32;
+  margin-bottom: 10px;
+}
+
+p {
+  color: #555;
+  margin-bottom: 20px;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+input:focus {
+  outline: none;
+  border-color: #2e7d32;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  background: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #1b5e20;
+}
+
+.small {
+  font-size: 14px;
+  margin-top: 15px;
+}
+
+.small a {
+  color: #2e7d32;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.success {
+  color: green;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+</style>
+<body>
+
+  <div class="register-container">
+    <h1>🌱 Join Green World</h1>
+    <p>Create an account to protect nature</p>
+
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+
+    <button id="registerBtn">Create Account</button>
+
+    <p id="successMsg" class="success"></p>
+
+    <p class="small">
+      Already have an account?
+      <a href="loginpage.html">Login</a>
+    </p>
+  </div>
+
+  <script type="module" src="register.js"></script>
+</body>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBnpg1zVQr2-mEPwet80zNExFaPEjls4Hc",
+  authDomain: "green-world-project.firebaseapp.com",
+  projectId: "green-world-project",
+  storageBucket: "green-world-project.firebasestorage.app",
+  messagingSenderId: "1096759081626",
+  appId: "1:1096759081626:web:1f15a558d2bfcad1b7bd23"
+};
+
+
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+const btn = document.getElementById("registerBtn");
+const msg = document.getElementById("successMsg");
+
+btn.addEventListener("click", () => {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  createUserWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      msg.textContent = "✅ Account created successfully!";
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 1500);
+    })
+    .catch(err => alert(err.message));
+});
+
+</script>
+</html>

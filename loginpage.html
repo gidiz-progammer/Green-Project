@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Green World | Login</title>
+  <link rel="stylesheet" href="loginpage.css">
+</head>
+<body>
+
+  <div class="login-container">
+    <h1>🌍 Green World</h1>
+    <p>Protect nature. Login to continue.</p>
+
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+
+    <button id="loginBtn">Login</button>
+
+    <p class="small">
+      Don’t have an account?
+      <a href="./createaccount page.html">Create one</a>
+    </p>
+  </div>
+    </body>
+ 
+<script type="module">
+    document.getElementById("loginBtn").addEventListener("click", () => {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  signInWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      window.location.href = "index.html";
+    })
+    .catch(err => alert(err.message));
+});
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+/* 🔴 YOUR REAL CONFIG */
+const firebaseConfig = {
+  apiKey: "AIzaSyBnpg1zVQr2-mEPwet80zNExFaPEjls4Hc",
+  authDomain: "green-world-project.firebaseapp.com",
+  projectId: "green-world-project",
+  storageBucket: "green-world-project.firebasestorage.app",
+  messagingSenderId: "1096759081626",
+  appId: "1:1096759081626:web:1f15a558d2bfcad1b7bd23"
+};const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+/* BUTTON CONNECTION */
+document.getElementById("loginBtn").onclick = login;
+document.getElementById("registerBtn").onclick = register;
+document.getElementById("resetBtn").onclick = resetPassword;
+
+/* FUNCTIONS */
+function login() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  signInWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      
+      window.location.href = "index.html";
+    })
+    .catch(e => alert(e.message));
+}
+
+
+
+function register() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  createUserWithEmailAndPassword(auth, email, password)
+    .then(() => alert("Account created"))
+    .catch(e => alert(e.message));
+}
+
+function resetPassword() {
+  const email = document.getElementById("email").value;
+  sendPasswordResetEmail(auth, email)
+    .then(() => alert("Reset email sent"))
+    .catch(e => alert(e.message));
+}
+import { onAuthStateChanged, signOut } from
+  "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+/* SHOW / HIDE SITE */
+onAuthStateChanged(auth, user => {
+  if (user) {
+    document.getElementById("authBox").style.display = "none";
+    document.getElementById("siteContent").style.display = "block";
+  } else {
+    document.getElementById("authBox").style.display = "block";
+    document.getElementById("siteContent").style.display = "none";
+  }
+});
+
+/* LOGOUT */
+window.logout = () => {
+  signOut(auth);
+};
+
+</script>
+
+</html>

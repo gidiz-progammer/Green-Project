@@ -150,6 +150,19 @@
       font-size: 1.5rem;
       color: #004d40;
     }
+.whatsapp-order-btn {
+  background-color: #1b8f6a;
+  color: #fff;
+  border: none;
+  padding: 14px 28px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.whatsapp-order-btn:hover {
+  background-color: #157457;
+}
 
   </style>
 </head>
@@ -179,7 +192,7 @@
         <div class="product-info">
           <h3>Green Tea</h3>
           <p>Boost your metabolism and immunity naturally.</p>
-          <button class="buy-btn">Buy Now</button>
+          <!-- <button class="buy-btn">Buy Now</button> -->
         </div>
       </div>
 
@@ -188,7 +201,7 @@
         <div class="product-info">
           <h3>Herbal Supplements</h3>
           <p>Support your wellness every day with natural ingredients.</p>
-          <button class="buy-btn">Buy Now</button>
+          <!-- <button class="buy-btn">Buy Now</button> -->
         </div>
       </div>
 
@@ -198,7 +211,7 @@
         <div class="product-info">
           <h3>Detox Capsules</h3>
           <p>Cleanse your body naturally and feel refreshed.</p>
-          <button class="buy-btn">Buy Now</button>
+          <!-- <button class="buy-btn">Buy Now</button> -->
         </div>
       </div>
 
@@ -207,7 +220,7 @@
         <div class="product-info">
           <h3>Organic Honey</h3>
           <p>Pure, natural honey sourced from trusted local farms.</p>
-          <button class="buy-btn">Buy Now</button>
+          <!-- <button class="buy-btn">Buy Now</button> -->
         </div>
       </div>
 
@@ -216,7 +229,7 @@
         <div class="product-info">
           <h3>Herbal Tea Mix</h3>
           <p>Relaxing blends to improve digestion and reduce stress.</p>
-          <button class="buy-btn">Buy Now</button>
+          <!-- <button class="buy-btn">Buy Now</button> -->
         </div>
       </div>
 
@@ -226,10 +239,36 @@
         <div class="product-info">
           <h3>Detox Tea</h3>
           <p>Cleanse your body gently with natural herbs.</p>
-          <button class="buy-btn">Buy Now</button>
+          <!-- <button class="buy-btn">Buy Now</button> -->
         </div>
       </div>
     </div>
+    <div style="text-align:center; margin-top:20px;">
+  <button class="whatsapp-order-btn"
+    onclick="orderProduct('Organic Fertilizer', '₦2,500')">
+    Order on WhatsApp
+  </button>
+</div>
+
   </main>
+  
+
+<script>
+function orderProduct(productName, price) {
+  const phone = "07067065524"; // 🔴 PUT YOUR WHATSAPP NUMBER HERE
+
+  const message =
+    "Hello  MRS ONi,Green world distributor🌱%0A%0A" +
+    "I want to order:%0A" +
+    "Product: " + productName + "%0A" +
+    "Price: " + price;
+
+  window.open(
+    "https://wa.me/" + phone + "?text=" + message,
+    "_blank"
+  );
+}
+</script>
+
 </body>
 </html>

@@ -163,6 +163,41 @@
       text-decoration: underline;
     }
 
+    input, textarea {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 15px;
+  border: 1px solid #cfcfcf;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #1b8f6a;
+}
+
+textarea {
+  min-height: 140px;
+  resize: none;
+}
+
+button {
+  padding: 14px 30px;
+  background: #1b8f6a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #157457;
+}
+
+
     </style>
 </head>
 <body>
@@ -184,7 +219,7 @@
     <div class="contact-info">
         <div class="info-box">
             <h3>Email</h3>
-            <p><a href="mailto:christianah.oni@example.com">christianah.oni@gmail.com</a></p>
+            <p><a href="mailto:christianah.onifolashade@gmail.com">christianah.oni@gmail.com</a></p>
         </div>
         <div class="info-box">
             <h3>Phone</h3>
@@ -200,12 +235,12 @@
         </div>
     </div>
 
-    <form action="#" method="POST">
-        <input type="text" name="name" placeholder="Your Name" required>
-        <input type="email" name="email" placeholder="Your Email" required>
-        <textarea name="message" rows="6" placeholder="Your Message" required></textarea>
-        <button type="submit">Send Message</button>
-    </form>
+    <div class="contact-form">
+  <input type="text" id="contactName" placeholder="Your Name">
+  <input type="email" id="contactEmail" placeholder="Your Email">
+  <textarea id="contactMessage" placeholder="Your Message"></textarea>
+  <button onclick="sendToWhatsApp()">Send Message</button>
+</div>
 
     <div class="map-container">
         <iframe 
@@ -223,6 +258,30 @@
 <footer>
     &copy; 2026 Oni Christianah Folashade | All Rights Reserved
 </footer>
+
+
+<script>
+function sendToWhatsApp() {
+  const name = document.getElementById("contactName").value;
+  const email = document.getElementById("contactEmail").value;
+  const message = document.getElementById("contactMessage").value;
+
+  if (!name || !email || !message) {
+    alert("Please fill all fields");
+    return;
+  }
+
+  const phone = "2347067065524"; 
+
+  const text =
+    "Hello Green World 🌱%0A%0A" +
+    "Name: " + name + "%0A" +
+    "Email: " + email + "%0A%0A" +
+    "Message:%0A" + message;
+
+  window.open("https://wa.me/" + phone + "?text=" + text, "_blank");
+}
+</script>
 
 </body>
 </html>
