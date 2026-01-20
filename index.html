@@ -1,9 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-  <script>
-  // Block rendering immediately
-  document.documentElement.style.display = "none";
-</script>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,7 +15,10 @@
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 />
-
+<style>
+    body {
+    display: none;
+  }
 
 </style>
 </head>
@@ -187,7 +186,7 @@
 
   <div class="social-links">
     <!-- WHATSAPP -->
-    <a href="https://wa.me/234070670656524" target="_blank" title="Chat on WhatsApp">
+    <a href="https://wa.me/2347067065524" target="_blank" title="Chat on WhatsApp">
       <i class="fab fa-whatsapp"></i>
     </a>
 
@@ -230,22 +229,22 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+// 🚨 BLOCK PAGE UNTIL AUTH IS CHECKED
 onAuthStateChanged(auth, (user) => {
   if (!user) {
     window.location.replace("loginpage.html");
   } else {
-    // ✅ User authenticated → show page
-    document.documentElement.style.display = "block";
+    // ✅ User is logged in → show page
+    document.body.style.display = "block";
   }
 });
 
-// Logout
+// 🚪 LOGOUT
 window.logout = async () => {
   await signOut(auth);
   window.location.replace("loginpage.html");
 };
 </script>
-
 
 
 
