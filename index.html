@@ -26,7 +26,7 @@
     <a href="./aboutpage.html" style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; transition:color 0.3s ease;">About</a>
     <a href="./contactpage.html" style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; transition:color 0.3s ease;">Contact</a>
         <a href="./loginpage.html" style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; transition:color 0.3s ease;">sign up</a>
-        <button style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; font-size: 18px; transition:color 0.3s ease;border: thin solid #00796b; background-color: #00796b;" id="logoutBtn"><a href="">Logout</a></button>
+        <button style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; font-size: 18px; transition:color 0.3s ease;border: thin solid #00796b; background-color: #00796b;" onclick="logout()"><a href="">Logout</a></button>
   </nav>
   
 </header>
@@ -213,7 +213,7 @@ import { getAuth, onAuthStateChanged, signOut } from
 "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBnpg1zVQr2-mEPwet80zNExFaPEjls4Hc",
+    apiKey: "AIzaSyBnpg1zVQr2-mEPwet80zNExFaPEjls4Hc",
   authDomain: "green-world-project.firebaseapp.com",
   projectId: "green-world-project",
   storageBucket: "green-world-project.firebasestorage.app",
@@ -224,21 +224,23 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// 🔒 Protect index.html
+// 🔐 PROTECT PAGE
 onAuthStateChanged(auth, (user) => {
   if (!user) {
     window.location.replace("loginpage.html");
   }
 });
 
-// 🚪 Logout function
-window.logoutBtn = function () {
-  signOut(auth).then(() => {
+// 🚪 LOGOUT (GLOBAL)
+window.logout = async () => {
+  try {
+    await signOut(auth);
     window.location.replace("loginpage.html");
-  });
+  } catch (e) {
+    console.error(e);
+  }
 };
 </script>
-
 
 
 </html>
