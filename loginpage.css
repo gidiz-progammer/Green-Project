@@ -22,7 +22,7 @@ body {
 .login-container {
   background: rgba(255, 255, 255, 0.95);
   padding: 40px;
-  width: 320px;
+  min-width:320px;
   border-radius: 15px;
   text-align: center;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
@@ -75,4 +75,10 @@ body {
   color: #2e7d32;
   text-decoration: none;
   font-weight: bold;
+}
+
+@media (max-width:320px)  {
+  .login-container{
+    
+  }
 }
