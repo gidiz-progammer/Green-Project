@@ -1,4 +1,15 @@
 /* RESET & BASE */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+}
+
+
 * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
 body { background: linear-gradient(180deg, #e6f5f2, #f2f2f2); color:#333; line-height:1.6; scroll-behavior:smooth; }
 a { text-decoration:none; color:inherit; }
@@ -358,4 +369,58 @@ header nav a::after {
 
 header nav a:hover::after {
   width: 60%;
+}
+
+
+/* BASE */
+header {
+  flex-wrap: wrap;
+}
+
+/* =======================
+   TABLET & PHONE
+======================= */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  /* title / logo */
+  header > div {
+    margin-bottom: 0.75rem;
+    text-align: center;
+  }
+
+  /* nav container */
+  header nav {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* links & button */
+  header nav a,
+  header nav button {
+    width: 100%;
+    margin-left: 0 !important; /* override inline */
+    margin: 0.3rem 0 !important;
+    text-align: center;
+    padding: 0.6rem 0;
+    font-size: 16px;
+  }
+}
+@media (max-width: 768px) {
+  section,
+  .container,
+  .product-container {
+    padding: 1rem;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
 }
