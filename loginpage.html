@@ -11,104 +11,78 @@
     <h1>🌍 Green World</h1>
     <p>Protect nature. Login to continue.</p>
 
+    <!-- Email & Password -->
     <input type="email" id="email" placeholder="Email" />
     <input type="password" id="password" placeholder="Password" />
 
+    <!-- Login button -->
     <button id="loginBtn">Login</button>
 
+    <!-- Message placeholder -->
+    <p id="loginMsg" class="small"></p>
+
+    <!-- Switch to sign up -->
     <p class="small">
       Don’t have an account?
       <a href="./createaccount page.html">Create one</a>
     </p>
-  </div>
-    </body>
- 
-<script type="module">
-    document.getElementById("loginBtn").addEventListener("click", () => {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  </div> 
 
-  signInWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      window.location.href = "index.html";
-    })
-    .catch(err => alert(err.message));
-});
-
+  <!-- Firebase + Auth JS -->
+  <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  sendPasswordResetEmail
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-/* 🔴 YOUR REAL CONFIG */
+// Firebase config (replace with your project info)
 const firebaseConfig = {
-  apiKey: "AIzaSyBnpg1zVQr2-mEPwet80zNExFaPEjls4Hc",
-  authDomain: "green-world-project.firebaseapp.com",
-  projectId: "green-world-project",
-  storageBucket: "green-world-project.firebasestorage.app",
-  messagingSenderId: "1096759081626",
-  appId: "1:1096759081626:web:1f15a558d2bfcad1b7bd23"
-};const app = initializeApp(firebaseConfig);
+   apiKey: "AIzaSyBnpg1zVQr2-mEPwet80zNExFaPEjls4Hc",
+   authDomain: "green-world-project.firebaseapp.com",
+   projectId: "green-world-project",
+   storageBucket: "green-world-project.firebasestorage.app",
+   messagingSenderId: "1096759081626",
+   appId: "1:1096759081626:web:1f15a558d2bfcad1b7bd23"
+};
+
+const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+const loginBtn = document.getElementById("loginBtn");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const loginMsg = document.getElementById("loginMsg");
 
+loginBtn.addEventListener("click", async () => {
+  const email = emailInput.value;
+  const password = passwordInput.value;
 
-/* BUTTON CONNECTION */
-document.getElementById("loginBtn").onclick = login;
-document.getElementById("registerBtn").onclick = register;
-document.getElementById("resetBtn").onclick = resetPassword;
+  if (!email || !password) {
+    loginMsg.textContent = "Please enter email and password.";
+    return;
+  }
 
-/* FUNCTIONS */
-function login() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  try {
+    // 1️⃣ Sign in
+    const userCred = await signInWithEmailAndPassword(auth, email, password);
 
-  signInWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      
-      window.location.href = "index.html";
-    })
-    .catch(e => alert(e.message));
-}
+    // 2️⃣ Check if email is verified
+    if (!userCred.user.emailVerified) {
+      // Block login
+      await signOut(auth); // immediately sign out
+      loginMsg.textContent = "⚠ Please verify your email before logging in.";
+      return;
+    }
 
+    // 3️⃣ Email verified → login allowed
+    loginMsg.textContent = "Login successful ✔";
+    // redirect to dashboard
+    // window.location.href = "dashboard.html";
 
-
-function register() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  createUserWithEmailAndPassword(auth, email, password)
-    .then(() => alert("Account created"))
-    .catch(e => alert(e.message));
-}
-
-function resetPassword() {
-  const email = document.getElementById("email").value;
-  sendPasswordResetEmail(auth, email)
-    .then(() => alert("Reset email sent"))
-    .catch(e => alert(e.message));
-}
-import { onAuthStateChanged, signOut } from
-  "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-/* SHOW / HIDE SITE */
-onAuthStateChanged(auth, user => {
-  if (user) {
-    document.getElementById("authBox").style.display = "none";
-    document.getElementById("siteContent").style.display = "block";
-  } else {
-    document.getElementById("authBox").style.display = "block";
-    document.getElementById("siteContent").style.display = "none";
+  } catch (err) {
+    loginMsg.textContent = err.message;
   }
 });
 
-/* LOGOUT */
-window.logout = () => {
-  signOut(auth);
-};
 
-</script>
-
+  </script>
+</body>
 </html>
