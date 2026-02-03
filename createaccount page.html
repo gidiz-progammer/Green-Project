@@ -116,6 +116,11 @@ button:hover {
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  updateProfile
+} from "firebase/auth";
 
 // Firebase config
 const firebaseConfig = {
@@ -163,6 +168,28 @@ btn.addEventListener("click", async () => {
   } catch (err) {
     alert(err.message);
   }
+  const handleSignup = async () => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    // OPTIONAL (but recommended)
+    await updateProfile(userCredential.user, {
+      displayName: name,
+    });
+
+    // SEND VERIFICATION EMAIL
+    await sendEmailVerification(userCredential.user);
+
+    alert("Verification email sent. Check your inbox.");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 });
 
 

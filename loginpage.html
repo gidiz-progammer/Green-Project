@@ -32,6 +32,7 @@
   <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 // Firebase config (replace with your project info)
 const firebaseConfig = {
@@ -80,6 +81,25 @@ loginBtn.addEventListener("click", async () => {
   } catch (err) {
     loginMsg.textContent = err.message;
   }
+  const handleLogin = async () => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    if (!userCredential.user.emailVerified) {
+      alert("Please verify your email before logging in.");
+      return;
+    }
+
+    // continue login
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 });
 
 
