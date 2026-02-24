@@ -326,6 +326,276 @@ footer { background:#16a085; color:white; text-align:center; padding:25px; font-
   background: #1b5e20;
   transform: scale(1.1);
 }
+
+.contact {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 88% 16%, rgba(255, 225, 137, 0.22), transparent 36%),
+    radial-gradient(circle at 12% 88%, rgba(175, 255, 240, 0.2), transparent 34%),
+    linear-gradient(140deg, #effaf7 0%, #ddf2ed 46%, #f2fbf8 100%);
+  border: 1px solid #c9e7de;
+}
+
+.contact::before {
+  content: "";
+  position: absolute;
+  inset: auto -120px -120px auto;
+  width: 260px;
+  height: 260px;
+  background: radial-gradient(circle, rgba(33, 173, 141, 0.14), transparent 66%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.contact-intro {
+  max-width: 760px;
+  margin: 0 auto 1.2rem;
+  text-align: center;
+  color: #1f5b50;
+  font-weight: 600;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.9rem;
+}
+
+.contact-box {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid #cae6df;
+  border-radius: 14px;
+  padding: 0.85rem 0.95rem;
+  box-shadow: 0 8px 18px rgba(12, 92, 75, 0.08);
+}
+
+.contact-box h3 {
+  margin: 0 0 0.45rem;
+  color: #0d7362;
+  font-size: 1rem;
+}
+
+.contact-box p,
+.contact-box a {
+  margin: 0;
+  color: #174a42;
+  font-weight: 700;
+  word-break: break-word;
+}
+
+.contact-cta {
+  display: flex;
+  gap: 0.65rem;
+  margin-top: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.contact-btn {
+  text-decoration: none;
+  padding: 0.68rem 1rem;
+  border-radius: 10px;
+  font-weight: 700;
+  border: 1px solid transparent;
+}
+
+.contact-btn.whatsapp {
+  background: #1f9b66;
+  color: #fff;
+}
+
+.contact-btn.whatsapp:hover {
+  background: #17774f;
+}
+
+.contact-btn.alt {
+  background: #fff;
+  color: #0c6b5c;
+  border-color: #9fd2c5;
+}
+
+.contact-btn.alt:hover {
+  background: #ebf9f3;
+}
+
+.contact-social {
+  max-width: 1100px;
+  margin: 0 auto 38px;
+  padding: 10px 18px 20px;
+  text-align: center;
+}
+
+.contact-social h2 {
+  color: #11574a;
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  margin-bottom: 0.2rem;
+}
+
+.contact-social p {
+  margin: 0 auto 0.9rem;
+  color: #326b60;
+  font-weight: 600;
+}
+
+.contact-social .social-links {
+  justify-content: center;
+}
+
+.why-us,
+.testimonials,
+.faq-home {
+  background:
+    radial-gradient(circle at 15% 18%, rgba(182, 255, 240, 0.22), transparent 33%),
+    radial-gradient(circle at 88% 84%, rgba(255, 232, 158, 0.2), transparent 34%),
+    linear-gradient(145deg, #ffffff, #ecf9f5);
+  border: 1px solid #cfe7df;
+  border-radius: 20px;
+  padding: 32px 20px;
+  margin: 0 auto 28px;
+  max-width: 1100px;
+  box-shadow: 0 14px 30px rgba(9, 91, 73, 0.1);
+}
+
+.why-us h2,
+.testimonials h2,
+.faq-home h2 {
+  text-align: center;
+  margin: 0 0 0.55rem;
+  color: #0f6657;
+  font-size: clamp(1.5rem, 4vw, 2.3rem);
+}
+
+.why-us-subtitle {
+  text-align: center;
+  margin: 0 auto 1rem;
+  color: #2f7063;
+  max-width: 720px;
+}
+
+.why-grid,
+.testimonial-grid,
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 0.85rem;
+}
+
+.why-card,
+.testimonial-card,
+.faq-grid details {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid #cfe7df;
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 8px 18px rgba(10, 86, 68, 0.08);
+}
+
+.why-card h3 {
+  margin: 0 0 0.35rem;
+  color: #147764;
+}
+
+.why-card p,
+.testimonial-card p {
+  margin: 0;
+  color: #295f54;
+}
+
+.testimonial-card {
+  margin: 0;
+}
+
+.testimonial-card cite {
+  display: block;
+  margin-top: 0.55rem;
+  color: #0e6d5b;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.testimonial-form-wrap {
+  margin-top: 1rem;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid #cfe7df;
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.testimonial-form-wrap h3 {
+  margin: 0 0 0.65rem;
+  color: #0f6f5d;
+}
+
+.testimonial-form {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.testimonial-form input,
+.testimonial-form textarea {
+  width: 100%;
+  border: 1px solid #b9ddd2;
+  border-radius: 10px;
+  padding: 11px 12px;
+  font: inherit;
+}
+
+.testimonial-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.testimonial-form button {
+  border: none;
+  border-radius: 10px;
+  background: #178f66;
+  color: #fff;
+  font-weight: 700;
+  padding: 11px 14px;
+  cursor: pointer;
+}
+
+.testimonial-form button:hover {
+  background: #0f7351;
+}
+
+.testimonial-list {
+  margin-top: 0.9rem;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.user-testimonial {
+  background: #ffffff;
+  border: 1px solid #d3e9e2;
+  border-radius: 12px;
+  padding: 11px 12px;
+}
+
+.user-testimonial p {
+  margin: 0;
+  color: #295f54;
+}
+
+.user-testimonial cite {
+  display: block;
+  margin-top: 0.45rem;
+  color: #0e6d5b;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.faq-grid details summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: #0f6f5d;
+}
+
+.faq-grid details p {
+  margin: 0.55rem 0 0;
+  color: #2d6257;
+}
 .learn-more-btn {
   display: inline-block;
   padding: 12px 26px;
@@ -422,5 +692,401 @@ header {
   img {
     max-width: 100%;
     height: auto;
+  }
+}
+
+/* Our Products layout fix */
+.products-container {
+  max-width: 1200px;
+  margin: 3rem auto;
+  padding: 0 1.5rem;
+}
+
+.products-container h2 {
+  text-align: center;
+}
+
+.products-container .products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+.products-container .product-card {
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  border: 1px solid #cfe9e4;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.products-container .product-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+  border: 2px solid #b7e2d9;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+/* Header spacing + responsive fix */
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  clip-path: none;
+  box-shadow: none;
+  padding: 0.8rem 1rem !important;
+}
+
+.site-header .site-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.site-header .site-nav a,
+.site-header .site-nav button {
+  margin-left: 0 !important;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  border-radius: 999px;
+  border: 1px solid rgba(178, 223, 219, 0.35);
+  background: rgba(178, 223, 219, 0.12);
+}
+
+@media (max-width: 768px) {
+  .site-header {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.75rem !important;
+  }
+
+  .site-header > div {
+    text-align: center;
+  }
+
+  .site-header .site-nav {
+    width: auto;
+    max-width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .site-header .site-nav a,
+  .site-header .site-nav button {
+    width: auto;
+    text-align: center;
+    margin: 0 !important;
+    padding: 0.42rem 0.72rem;
+    font-size: 0.92rem;
+  }
+}
+
+.site-header > div {
+  max-width: min(100%, 420px);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+@media (max-width: 992px) {
+  .hero-header {
+    padding: 58px 16px 84px;
+  }
+
+  .hero-header h1 {
+    font-size: 2.15rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-header {
+    padding: 42px 14px 66px;
+    clip-path: polygon(0 0, 100% 0, 100% 92%, 0% 100%);
+  }
+
+  .hero-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .hero-header p {
+    font-size: 1rem;
+  }
+
+  .about,
+  .products-container,
+  .location,
+  .contact,
+  .green-section,
+  .fertilizer-gallery {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-cta .contact-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .why-us,
+  .testimonials,
+  .faq-home {
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 22px 14px;
+    border-radius: 16px;
+  }
+
+  .why-grid,
+  .testimonial-grid,
+  .faq-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .map {
+    height: 320px;
+  }
+}
+
+@media (max-width: 420px) {
+  .site-header > div {
+    font-size: 1.05rem !important;
+  }
+
+  .site-header .site-nav {
+    gap: 0.28rem;
+  }
+
+  .site-header .site-nav a,
+  .site-header .site-nav button {
+    padding: 0.36rem 0.62rem;
+    font-size: 0.86rem;
+  }
+}
+
+/* ===== Fantasy Home Add-on ===== */
+.fantasy-banner {
+  max-width: 1200px;
+  margin: 18px auto 8px;
+  padding: 0 14px;
+}
+
+.fantasy-banner-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  padding: 26px 18px;
+  color: #ecfff9;
+  background:
+    radial-gradient(circle at 85% 20%, rgba(255, 232, 159, 0.25) 0%, transparent 40%),
+    radial-gradient(circle at 15% 80%, rgba(174, 255, 241, 0.2) 0%, transparent 42%),
+    linear-gradient(120deg, #06473d, #0e816f, #0a6154);
+  box-shadow: 0 14px 34px rgba(4, 70, 59, 0.25);
+}
+
+.fantasy-banner-card h2 {
+  margin: 0;
+  font-size: clamp(1.35rem, 3.6vw, 2.1rem);
+  letter-spacing: 0.5px;
+}
+
+.fantasy-banner-card p {
+  margin: 10px 0 14px;
+  max-width: 700px;
+  color: #dbfff5;
+}
+
+.fantasy-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.fantasy-badges span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.78rem;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.fantasy-actions {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.fantasy-actions a {
+  text-decoration: none;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 0.62rem 0.9rem;
+}
+
+.fantasy-actions .primary {
+  color: #063d34;
+  background: #ffe08a;
+}
+
+.fantasy-actions .secondary {
+  color: #ecfff9;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+@media (max-width: 640px) {
+  .fantasy-banner-card {
+    border-radius: 14px;
+    padding: 18px 14px;
+  }
+
+  .fantasy-actions a {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ===== Fantasy Lab ===== */
+.fantasy-lab {
+  max-width: 1200px;
+  margin: 18px auto;
+  padding: 24px 16px;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 90% 10%, rgba(255, 220, 120, 0.26), transparent 28%),
+    radial-gradient(circle at 15% 85%, rgba(177, 255, 229, 0.3), transparent 30%),
+    linear-gradient(135deg, #0b4a40, #0f7b6b, #0a6153);
+  color: #ecfff9;
+  box-shadow: 0 18px 32px rgba(5, 71, 60, 0.25);
+}
+
+.fantasy-lab h2 {
+  margin: 0;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+}
+
+.fantasy-lab .lab-subtitle {
+  margin: 8px 0 14px;
+  color: #d4fff4;
+}
+
+.lab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.lab-card {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 14px;
+  padding: 14px;
+  backdrop-filter: blur(3px);
+}
+
+.lab-card h3 {
+  margin: 0 0 8px;
+  color: #fff5cc;
+}
+
+.lab-form {
+  display: grid;
+  gap: 8px;
+}
+
+.lab-form label {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.lab-form input,
+.lab-form select {
+  width: 100%;
+  border: 1px solid rgba(223, 255, 247, 0.7);
+  border-radius: 9px;
+  padding: 0.55rem 0.62rem;
+  background: #ffffff;
+  color: #12564a;
+}
+
+.lab-form button,
+.lab-secondary-btn,
+.lab-whatsapp-btn {
+  border: 0;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.62rem 0.78rem;
+}
+
+.lab-form button {
+  background: #ffe08a;
+  color: #0a3f35;
+}
+
+.lab-secondary-btn {
+  background: #eefef9;
+  color: #0c6657;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.lab-whatsapp-btn {
+  margin-top: 10px;
+  background: #1f9d52;
+  color: #ffffff;
+  width: 100%;
+}
+
+.lab-result {
+  margin-top: 10px;
+  min-height: 58px;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 0.92rem;
+  background: rgba(5, 56, 48, 0.45);
+  border: 1px dashed rgba(220, 255, 245, 0.38);
+}
+
+.lab-card-highlight {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.09));
+}
+
+@media (max-width: 768px) {
+  .fantasy-lab {
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 16px;
+    padding: 18px 12px;
   }
 }

@@ -1,19 +1,32 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Green World | Login</title>
   <link rel="stylesheet" href="loginpage.css">
 </head>
 <body>
+  <video class="bg-video" autoplay muted loop playsinline>
+    <source src="https://videos.pexels.com/video-files/2878084/2878084-uhd_2560_1440_24fps.mp4" type="video/mp4">
+  </video>
+  <div class="bg-video-overlay"></div>
 
   <div class="login-container">
-    <h1>🌍 Green World</h1>
+    <h1>Green World</h1>
     <p>Protect nature. Login to continue.</p>
 
     <!-- Email & Password -->
     <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Password" />
+    <div class="password-wrap">
+      <input type="password" id="password" placeholder="Password" />
+      <button type="button" id="togglePassword" class="toggle-password is-closed" aria-label="Show password">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6Z"></path>
+          <circle cx="12" cy="12" r="3.2"></circle>
+        </svg>
+      </button>
+    </div>
 
     <!-- Login button -->
     <button id="loginBtn">Login</button>
@@ -23,37 +36,41 @@
 
     <!-- Switch to sign up -->
     <p class="small">
-      Don’t have an account?
+      Don't have an account?
       <a href="./createaccount page.html">Create one</a>
     </p>
-  </div> 
+  </div>
 
   <!-- Firebase + Auth JS -->
   <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import * as FirebaseApp from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import * as FirebaseAuth from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+console.log("LOGIN_AUTH_SCRIPT_VERSION_2026_02_23_01");
 
 // Firebase config (replace with your project info)
 const firebaseConfig = {
-   apiKey: "AIzaSyBnpg1zVQr2-mEPwet80zNExFaPEjls4Hc",
-   authDomain: "green-world-project.firebaseapp.com",
-   projectId: "green-world-project",
-   storageBucket: "green-world-project.firebasestorage.app",
-   messagingSenderId: "1096759081626",
-   appId: "1:1096759081626:web:1f15a558d2bfcad1b7bd23"
+  apiKey: "AIzaSyBnpg1zVQr2-mEPwet80zNExFaPEjls4Hc",
+  authDomain: "green-world-project.firebaseapp.com",
+  projectId: "green-world-project",
+  storageBucket: "green-world-project.firebasestorage.app",
+  messagingSenderId: "1096759081626",
+  appId: "1:1096759081626:web:1f15a558d2bfcad1b7bd23"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+const app = FirebaseApp.getApps().length
+  ? FirebaseApp.getApp()
+  : FirebaseApp.initializeApp(firebaseConfig);
+const auth = FirebaseAuth.getAuth(app);
 
 const loginBtn = document.getElementById("loginBtn");
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
+const togglePasswordBtn = document.getElementById("togglePassword");
 const loginMsg = document.getElementById("loginMsg");
 
 loginBtn.addEventListener("click", async () => {
-  const email = emailInput.value;
+  loginMsg.textContent = "";
+  const email = emailInput.value.trim();
   const password = passwordInput.value;
 
   if (!email || !password) {
@@ -62,46 +79,53 @@ loginBtn.addEventListener("click", async () => {
   }
 
   try {
-    // 1️⃣ Sign in
-    const userCred = await signInWithEmailAndPassword(auth, email, password);
+    // 1) Sign in
+    const userCred = await FirebaseAuth.signInWithEmailAndPassword(auth, email, password);
 
-    // 2️⃣ Check if email is verified
+    // 2) Check if email is verified
     if (!userCred.user.emailVerified) {
       // Block login
-      await signOut(auth); // immediately sign out
-      loginMsg.textContent = "⚠ Please verify your email before logging in.";
+      await FirebaseAuth.sendEmailVerification(userCred.user);
+      await FirebaseAuth.signOut(auth); // immediately sign out
+      loginMsg.textContent = "Please verify your email before logging in. A new verification email was sent.";
       return;
     }
 
-    // 3️⃣ Email verified → login allowed
-    loginMsg.textContent = "Login successful ✔";
+    // 3) Email verified -> login allowed
+    window.location.href = "index.html";
+
     // redirect to dashboard
     // window.location.href = "dashboard.html";
 
   } catch (err) {
-    loginMsg.textContent = err.message;
+    const friendlyErrors = {
+      "auth/invalid-email": "Invalid email format.",
+      "auth/invalid-credential": "Incorrect email or password.",
+      "auth/user-not-found": "No account found for this email.",
+      "auth/wrong-password": "Incorrect email or password.",
+      "auth/too-many-requests": "Too many attempts. Please try again later.",
+      "auth/network-request-failed": "Network error. Check your internet connection."
+    };
+    loginMsg.textContent = friendlyErrors[err.code] || err.message || "Login failed.";
+    console.error("Login error:", err);
   }
-  const handleLogin = async () => {
-  try {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-
-    if (!userCredential.user.emailVerified) {
-      alert("Please verify your email before logging in.");
-      return;
-    }
-
-    // continue login
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
 });
 
+// Allow Enter key to trigger login from either input field.
+[emailInput, passwordInput].forEach((input) => {
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      loginBtn.click();
+    }
+  });
+});
+
+togglePasswordBtn.addEventListener("click", () => {
+  const isHidden = passwordInput.type === "password";
+  passwordInput.type = isHidden ? "text" : "password";
+  togglePasswordBtn.classList.toggle("is-closed", !isHidden);
+  togglePasswordBtn.setAttribute("aria-label", isHidden ? "Hide password" : "Show password");
+});
 
   </script>
 </body>

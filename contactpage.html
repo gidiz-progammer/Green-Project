@@ -1,287 +1,519 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Oni Christianah Folashade | Green World Distributor</title>
-    <style>
-        /* Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Oni Christianah Folashade | Green World Distributor</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito:wght@400;600;700&display=swap');
 
-        body {
-            font-family: 'Arial', sans-serif;
-            background: #f0fff8;
-            color: #333;
-        }
+    :root {
+      --deep-forest: #073b34;
+      --emerald: #0f7f6f;
+      --mint: #d9f4eb;
+      --gold: #f4c95d;
+      --text: #17302b;
+      --white: #ffffff;
+      --card: rgba(255, 255, 255, 0.84);
+      --line: #cfe7df;
+    }
 
-        header {
-            background: linear-gradient(135deg, #2a9d8f, #66c2ba);
-            color: white;
-            padding: 80px 20px;
-            text-align: center;
-        }
+    * { box-sizing: border-box; }
 
-        header h1 {
-            font-size: 3em;
-            margin-bottom: 10px;
-            animation: fadeInDown 1s ease-in-out;
-        }
+    body {
+      margin: 0;
+      font-family: 'Nunito', sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 8% 15%, #d2f9eb 0%, transparent 28%),
+        radial-gradient(circle at 90% 8%, #bdefff 0%, transparent 24%),
+        radial-gradient(circle at 85% 88%, #ffe9b8 0%, transparent 26%),
+        linear-gradient(155deg, #ecfff8 0%, #d8f2ea 42%, #eef6ff 100%);
+    }
 
-        header p {
-            font-size: 1.3em;
-            animation: fadeInUp 1s ease-in-out;
-        }
+    header {
+      position: relative;
+      overflow: hidden;
+      padding: 54px 18px 36px;
+      text-align: center;
+      color: var(--white);
+      background: linear-gradient(120deg, #063f37, #0f7f6f, #1a9f8a);
+    }
 
-        @keyframes fadeInDown {
-            0% {opacity: 0; transform: translateY(-50px);}
-            100% {opacity: 1; transform: translateY(0);}
-        }
+    header::before,
+    header::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.2;
+    }
 
-        @keyframes fadeInUp {
-            0% {opacity: 0; transform: translateY(50px);}
-            100% {opacity: 1; transform: translateY(0);}
-        }
+    header::before {
+      width: 300px;
+      height: 300px;
+      background: #fff3bf;
+      top: -140px;
+      right: -80px;
+    }
 
-        main {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 50px 20px;
-        }
+    header::after {
+      width: 220px;
+      height: 220px;
+      background: #b7fff0;
+      bottom: -120px;
+      left: -70px;
+    }
 
-        h2 {
-            color: #264653;
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 2em;
-        }
+    .hero {
+      position: relative;
+      z-index: 1;
+      max-width: 980px;
+      margin: 0 auto;
+    }
 
-        .contact-info {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            margin-bottom: 50px;
-            gap: 30px;
-        }
+    h1 {
+      margin: 0;
+      font-family: 'Cinzel', serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: clamp(2rem, 5vw, 3.1rem);
+      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+    }
 
-        .info-box {
-            background-color: #e9f5f2;
-            padding: 30px;
-            border-radius: 15px;
-            width: 280px;
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-
-        .info-box:hover {
-            transform: translateY(-10px);
-        }
-
-        .info-box h3 {
-            margin-bottom: 10px;
-            color: #2a9d8f;
-        }
-
-        .info-box p a {
-            color: #2a9d8f;
-            text-decoration: none;
-        }
-
-        form {
-            background-color: #fff;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        }
-
-        form input, form textarea {
-            width: 100%;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            font-size: 1em;
-        }
-
-        form button {
-            background: #2a9d8f;
-            color: white;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.2em;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.3s ease;
-        }
-
-        form button:hover {
-            background: #66c2ba;
-            transform: scale(1.05);
-        }
-
-        .map-container {
-            margin-top: 50px;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #264653;
-            color: white;
-            margin-top: 50px;
-        }
-
-        @media(max-width: 768px){
-            .contact-info {
-                flex-direction: column;
-                align-items: center;
-            }
-            .info-box {
-                width: 90%;
-            }
-        }
-
-                 nav a {
-      color: white;
-      text-decoration: none;
-      margin-left: 1.5rem;
+    .hero p {
+      margin: 10px auto 0;
+      max-width: 760px;
       font-weight: 600;
-      transition: all 0.3s ease;
+      color: #e8fff8;
+      font-size: clamp(1rem, 2.4vw, 1.15rem);
     }
 
-    nav a:hover {
-      color: #004d40;
-      background: #b2dfdb;
-      padding: 0.3rem 0.7rem;
-      border-radius: 6px;
-      text-decoration: underline;
+    nav {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.6rem;
     }
 
-    input, textarea {
-  width: 100%;
-  padding: 14px;
-  margin-bottom: 15px;
-  border: 1px solid #cfcfcf;
-  border-radius: 8px;
-  font-size: 16px;
-  outline: none;
-}
+    nav a {
+      color: #f3fffb;
+      text-decoration: none;
+      padding: 0.44rem 0.82rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      background: rgba(255, 255, 255, 0.1);
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
 
-input:focus,
-textarea:focus {
-  border-color: #1b8f6a;
-}
+    nav a:hover,
+    nav a.active {
+      background: rgba(255, 255, 255, 0.24);
+      transform: translateY(-2px);
+    }
 
-textarea {
-  min-height: 140px;
-  resize: none;
-}
+    main {
+      max-width: 1020px;
+      margin: -18px auto 34px;
+      padding: 0 14px;
+    }
 
-button {
-  padding: 14px 30px;
-  background: #1b8f6a;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-}
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.68);
+      border-radius: 20px;
+      box-shadow: 0 14px 38px rgba(17, 73, 63, 0.14);
+      backdrop-filter: blur(6px);
+      padding: 20px 16px;
+    }
 
-button:hover {
-  background: #157457;
-}
+    h2 {
+      margin: 0 0 10px;
+      font-family: 'Cinzel', serif;
+      color: var(--deep-forest);
+      font-size: clamp(1.2rem, 3vw, 1.55rem);
+      border-bottom: 3px solid var(--gold);
+      display: inline-block;
+      padding-bottom: 4px;
+    }
 
+    .intro {
+      margin: 0 0 14px;
+      font-size: 1.02rem;
+    }
 
-    </style>
+    .contact-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .info-box {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+
+    .info-box h3 {
+      margin: 0 0 6px;
+      color: var(--emerald);
+      font-size: 1rem;
+    }
+
+    .info-box p {
+      margin: 0;
+      word-break: break-word;
+    }
+
+    a {
+      color: #0d7264;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+      margin: 0 0 14px;
+    }
+
+    .quick-btn {
+      text-align: center;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #bfe2d8;
+      background: linear-gradient(120deg, #effff9, #ffffff);
+      color: #0c6f60;
+      font-weight: 800;
+    }
+
+    .quick-btn:hover {
+      text-decoration: none;
+      transform: translateY(-1px);
+    }
+
+    .smart-panel {
+      margin-bottom: 14px;
+      border: 1px solid #c9e5dd;
+      border-radius: 12px;
+      padding: 12px;
+      background: rgba(247, 255, 252, 0.9);
+    }
+
+    .smart-panel h3 {
+      margin: 0 0 8px;
+      color: #0f7263;
+      font-size: 1rem;
+    }
+
+    .smart-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 9px;
+      align-items: end;
+    }
+
+    .smart-grid label {
+      font-weight: 700;
+      font-size: 0.87rem;
+      color: #1f5348;
+    }
+
+    .smart-grid select,
+    .smart-grid input {
+      width: 100%;
+      border: 1px solid #c6dfd7;
+      border-radius: 9px;
+      padding: 10px 11px;
+      font-size: 0.95rem;
+      background: #fff;
+    }
+
+    .status-pill {
+      margin-top: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 800;
+      background: #eafff8;
+      border: 1px solid #b9e7d9;
+      color: #0d6f60;
+    }
+
+    .helper-text {
+      margin-top: 8px;
+      font-size: 0.9rem;
+      color: #285f53;
+    }
+
+    .contact-form {
+      margin-top: 10px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .contact-form label {
+      font-weight: 700;
+      font-size: 0.94rem;
+      color: #1d4d43;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      border: 1px solid #c6dfd7;
+      border-radius: 10px;
+      padding: 12px 13px;
+      font-size: 1rem;
+      font-family: inherit;
+      background: #ffffff;
+      outline: none;
+    }
+
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      border-color: #1a8d79;
+      box-shadow: 0 0 0 2px rgba(26, 141, 121, 0.15);
+    }
+
+    .contact-form textarea {
+      min-height: 130px;
+      resize: vertical;
+    }
+
+    .send-btn {
+      border: none;
+      background: linear-gradient(120deg, #0d7f6e, #11a183);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      border-radius: 10px;
+      padding: 12px 15px;
+      cursor: pointer;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    .send-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(0.96);
+    }
+
+    .map-container {
+      margin-top: 16px;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 9px 24px rgba(6, 72, 60, 0.14);
+      border: 1px solid #d2e7e1;
+    }
+
+    footer {
+      text-align: center;
+      padding: 16px 10px 22px;
+      color: #e9fff8;
+      background: linear-gradient(120deg, #063f37, #0e6e61);
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    @media (max-width: 640px) {
+      header { padding: 44px 12px 30px; }
+      .card { padding: 16px 13px; border-radius: 16px; }
+      .map-container iframe { height: 300px; }
+    }
+  </style>
 </head>
 <body>
-
-<header>
-    <h1>Contact Oni Christianah Folashade</h1>
-            <nav>
-      <a href="index.html">Home</a>
-      <a href="products.html" class="active">Products</a>
-      <a href="aboutpage.html">About</a>
-      <a href="contactpage.html">Contact</a>
-    </nav><br>
-    <p>Your Green World Distributor & Wellness Partner in Ondo, Ore</p>
-</header>
-
-<main>
-    <h2>Get in Touch</h2>
-
-    <div class="contact-info">
-        <div class="info-box">
-            <h3>Email</h3>
-            <p><a href="mailto:christianah.onifolashade@gmail.com">christianah.oni@gmail.com</a></p>
-        </div>
-        <div class="info-box">
-            <h3>Phone</h3>
-            <p><a href="tel:+2348000000000">+234 706 706 5524</a></p>
-        </div>
-        <div class="info-box">
-            <h3>Instagram</h3>
-            <p><a href="https://instagram.com/onichristianah@gmail.com" target="_blank">@Christianah oni</a></p>
-        </div>
-        <div class="info-box">
-            <h3>Visit My Shop</h3>
-            <p>Ondo, Ore, Nigeria</p>
-        </div>
+  <header>
+    <div class="hero">
+      <h1>Contact Oni Christianah Folashade</h1>
+      <p>Your Green World Distributor and Wellness Partner in Ondo, Ore</p>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="productpage.html">Products</a>
+        <a href="aboutpage.html">About</a>
+        <a href="contactpage.html" class="active">Contact</a>
+      </nav>
     </div>
+  </header>
 
-    <div class="contact-form">
-  <input type="text" id="contactName" placeholder="Your Name">
-  <input type="email" id="contactEmail" placeholder="Your Email">
-  <textarea id="contactMessage" placeholder="Your Message"></textarea>
-  <button onclick="sendToWhatsApp()">Send Message</button>
-</div>
+  <main>
+    <div class="card">
+      <h2>Get In Touch</h2>
+      <p class="intro">Send your message directly to WhatsApp. When you click Send Message, it opens WhatsApp chat to this number: <strong>07067065524</strong>.</p>
 
-    <div class="map-container">
-        <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3959.1234567890!2d5.1234567!3d7.1234567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103b1234567890%3A0xabcdef1234567890!2sOndo%20Ore!5e0!3m2!1sen!2sng!4v1678901234567!5m2!1sen!2sng" 
-            width="100%" 
-            height="450" 
-            style="border:0;" 
-            allowfullscreen="" 
-            loading="lazy" 
-            referrerpolicy="no-referrer-when-downgrade">
+      <div class="contact-info">
+        <div class="info-box">
+          <h3>Email</h3>
+          <p><a href="mailto:christianah.oni@gmail.com">christianah.oni@gmail.com</a></p>
+        </div>
+        <div class="info-box">
+          <h3>Phone</h3>
+          <p><a href="tel:+2347067065524">+234 706 706 5524</a></p>
+        </div>
+        <div class="info-box">
+          <h3>Instagram</h3>
+          <p><a href="https://instagram.com/yourusername" target="_blank" rel="noopener noreferrer">@yourusername</a></p>
+        </div>
+        <div class="info-box">
+          <h3>Location</h3>
+          <p>Ondo, Ore, Nigeria</p>
+        </div>
+      </div>
+
+      <div class="quick-actions">
+        <a class="quick-btn" href="tel:+2347067065524">Call Now</a>
+        <a class="quick-btn" href="https://wa.me/2347067065524" target="_blank" rel="noopener noreferrer">Open WhatsApp</a>
+        <a class="quick-btn" href="https://maps.google.com/?q=Ore,+Ondo,+Nigeria" target="_blank" rel="noopener noreferrer">Open Google Map</a>
+      </div>
+
+      <div class="smart-panel">
+        <h3>Smart Contact Assistant</h3>
+        <div class="smart-grid">
+          <div>
+            <label for="messageType">Message Type</label>
+            <select id="messageType">
+              <option value="General Inquiry">General Inquiry</option>
+              <option value="Product Recommendation">Product Recommendation</option>
+              <option value="Order Request">Order Request</option>
+              <option value="Delivery Question">Delivery Question</option>
+            </select>
+          </div>
+          <div>
+            <label for="urgency">Urgency</label>
+            <select id="urgency">
+              <option value="Normal">Normal</option>
+              <option value="Important">Important</option>
+              <option value="Urgent">Urgent</option>
+            </select>
+          </div>
+          <div>
+            <label for="bestTime">Best Time to Reach You</label>
+            <input id="bestTime" type="text" placeholder="e.g. 2:00 PM - 5:00 PM">
+          </div>
+        </div>
+        <span class="status-pill" id="branchLiveStatus">Checking branch status...</span>
+        <p class="helper-text" id="responseEta">Estimated response time will appear here.</p>
+      </div>
+
+      <form id="contactForm" class="contact-form">
+        <label for="contactName">Your Name</label>
+        <input type="text" id="contactName" placeholder="Enter your full name" required>
+
+        <label for="contactEmail">Your Email</label>
+        <input type="email" id="contactEmail" placeholder="Enter your email address" required>
+
+        <label for="contactMessage">Your Message</label>
+        <textarea id="contactMessage" placeholder="Type your message here" required></textarea>
+
+        <button type="submit" class="send-btn">Send Message</button>
+      </form>
+
+      <div class="map-container">
+        <iframe
+          src="https://www.google.com/maps?q=Ore,+Ondo,+Nigeria&output=embed"
+          width="100%"
+          height="420"
+          style="border:0;"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Map of Ore, Ondo, Nigeria">
         </iframe>
+      </div>
     </div>
-</main>
+  </main>
 
-<footer>
+  <footer>
     &copy; 2026 Oni Christianah Folashade | All Rights Reserved
-</footer>
+  </footer>
 
+  <script>
+    function sendToWhatsApp() {
+      const name = document.getElementById('contactName').value.trim();
+      const email = document.getElementById('contactEmail').value.trim();
+      const message = document.getElementById('contactMessage').value.trim();
+      const messageType = document.getElementById('messageType').value;
+      const urgency = document.getElementById('urgency').value;
+      const bestTime = document.getElementById('bestTime').value.trim();
 
-<script>
-function sendToWhatsApp() {
-  const name = document.getElementById("contactName").value;
-  const email = document.getElementById("contactEmail").value;
-  const message = document.getElementById("contactMessage").value;
+      if (!name || !email || !message) {
+        alert('Please fill all fields.');
+        return;
+      }
 
-  if (!name || !email || !message) {
-    alert("Please fill all fields");
-    return;
-  }
+      const phone = '2347067065524';
+      const text = [
+        'Hello Green World,',
+        '',
+        'Name: ' + name,
+        'Email: ' + email,
+        'Message Type: ' + messageType,
+        'Urgency: ' + urgency,
+        'Best Time: ' + (bestTime || 'Not specified'),
+        '',
+        'Message:',
+        message
+      ].join('\n');
 
-  const phone = "2347067065524"; 
+      const url = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(text);
+      window.open(url, '_blank');
+    }
 
-  const text =
-    "Hello Green World 🌱%0A%0A" +
-    "Name: " + name + "%0A" +
-    "Email: " + email + "%0A%0A" +
-    "Message:%0A" + message;
+    document.getElementById('contactForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      sendToWhatsApp();
+    });
 
-  window.open("https://wa.me/" + phone + "?text=" + text, "_blank");
-}
-</script>
+    function updateBranchStatus() {
+      const statusEl = document.getElementById('branchLiveStatus');
+      const etaEl = document.getElementById('responseEta');
+      const now = new Date();
+      const day = now.getDay();
+      const hour = now.getHours();
+      const isOpenDay = day >= 1 && day <= 6;
+      const isOpenHour = hour >= 7 && hour < 18;
+      const isOpen = isOpenDay && isOpenHour;
 
+      statusEl.textContent = isOpen ? 'Branch Status: Open Now' : 'Branch Status: Currently Closed';
+      statusEl.style.background = isOpen ? '#eafff8' : '#fff7e6';
+      statusEl.style.borderColor = isOpen ? '#b9e7d9' : '#f2d6a7';
+      statusEl.style.color = isOpen ? '#0d6f60' : '#8a5d12';
+
+      if (isOpen) {
+        etaEl.textContent = 'Estimated response: 5 to 20 minutes on WhatsApp.';
+      } else {
+        etaEl.textContent = 'Estimated response: within next business session (Mon-Sat, 7:00 AM - 6:00 PM).';
+      }
+    }
+
+    function setMessageTemplate() {
+      const type = document.getElementById('messageType').value;
+      const messageBox = document.getElementById('contactMessage');
+      const templates = {
+        'General Inquiry': 'Hello Ma, I want to ask about Green World products and how to get started.',
+        'Product Recommendation': 'Hello Ma, please recommend the right products for my health goal.',
+        'Order Request': 'Hello Ma, I want to place an order. Please confirm availability and total cost.',
+        'Delivery Question': 'Hello Ma, I want to ask about delivery cost and timeline to my location.'
+      };
+
+      if (!messageBox.value.trim()) {
+        messageBox.value = templates[type] || '';
+      }
+    }
+
+    document.getElementById('messageType').addEventListener('change', setMessageTemplate);
+    updateBranchStatus();
+    setInterval(updateBranchStatus, 60000);
+  </script>
 </body>
 </html>

@@ -24,11 +24,17 @@
     }
     nav {
       margin-top: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.7rem;
     }
     nav a {
       color: white;
       text-decoration: none;
-      margin: 0 1.2rem;
+      margin: 0;
+      padding: 0.35rem 0.7rem;
+      border-radius: 8px;
       font-weight: 600;
       font-size: 1.1rem;
       transition: color 0.3s ease;
@@ -202,6 +208,50 @@
       font-weight: 700;
       margin-bottom: 0.5rem;
       color: #00796b;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 1.5rem 1rem 2.2rem;
+      }
+
+      .name-container {
+        width: min(92vw, 520px);
+        font-size: 1.55rem;
+        padding: 0.9rem 1rem;
+        text-align: center;
+      }
+
+      .distributor-label {
+        font-size: 1.02rem;
+        padding: 0.35rem 0.9rem;
+      }
+
+      nav {
+        margin-top: 1rem;
+      }
+
+      nav a {
+        font-size: 0.95rem;
+      }
+
+      section {
+        padding: 1.2rem 1rem;
+      }
+
+      .product-card {
+        flex: 1 1 100%;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .name-container {
+        font-size: 1.28rem;
+      }
+
+      .tagline {
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
