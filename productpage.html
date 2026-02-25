@@ -13,8 +13,6 @@
       --line: #d8ebe5;
       --text: #0b3f35;
       --muted: #3b6d63;
-      --danger: #b42318;
-      --danger-dark: #8f1c14;
       --shadow: 0 8px 22px rgba(6, 90, 75, 0.12);
     }
 
@@ -146,6 +144,43 @@
       text-decoration: underline;
     }
 
+    .cart-entry {
+      margin: 0 0 1rem;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .cart-open-btn {
+      border: none;
+      border-radius: 999px;
+      background: var(--brand-dark);
+      color: #fff;
+      padding: 0.58rem 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .cart-open-btn:hover {
+      background: #04473c;
+    }
+
+    .cart-count-badge {
+      min-width: 1.45rem;
+      height: 1.45rem;
+      border-radius: 999px;
+      background: #fff;
+      color: var(--brand-dark);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      padding: 0 0.3rem;
+      font-weight: 800;
+    }
+
     .filter-btn {
       border: 1px solid #abd6cb;
       border-radius: 999px;
@@ -248,9 +283,7 @@
       padding: 0.45rem;
     }
 
-    .add-cart-btn,
-    .whatsapp-order-btn,
-    .clear-cart-btn {
+    .add-cart-btn {
       border: none;
       border-radius: 8px;
       cursor: pointer;
@@ -268,74 +301,26 @@
       background: var(--brand-dark);
     }
 
-    .cart-panel {
-      margin-top: 1.2rem;
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 1rem;
-      box-shadow: var(--shadow);
-    }
-
-    .cart-panel h3 {
-      margin-top: 0;
-      margin-bottom: 0.5rem;
-    }
-
-    #cartItems {
-      margin: 0 0 0.8rem;
-      padding-left: 1.1rem;
-    }
-
-    #cartItems li {
-      margin-bottom: 0.55rem;
-    }
-
-    #cartSummary {
-      font-weight: 700;
-      margin: 0.2rem 0 0.85rem;
-      color: var(--brand-dark);
-    }
-
-    .remove-item-btn {
-      border: 1px solid #dfb7b7;
-      color: #8f1c14;
-      background: #fff4f4;
-      border-radius: 7px;
-      padding: 0.2rem 0.42rem;
-      cursor: pointer;
-      font-size: 0.73rem;
-      margin-top: 0.32rem;
-    }
-
-    .remove-item-btn:hover {
-      background: #fee7e7;
-    }
-
-    .cart-actions {
-      display: flex;
-      gap: 0.55rem;
-      flex-wrap: wrap;
-    }
-
-    .whatsapp-order-btn {
-      background: #1e8e3e;
+    .cart-toast {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      background: #0e6e61;
       color: #fff;
-      padding: 0.75rem 1rem;
+      padding: 0.62rem 0.8rem;
+      border-radius: 10px;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 9999;
     }
 
-    .whatsapp-order-btn:hover {
-      background: #187033;
-    }
-
-    .clear-cart-btn {
-      background: var(--danger);
-      color: #fff;
-      padding: 0.75rem 1rem;
-    }
-
-    .clear-cart-btn:hover {
-      background: var(--danger-dark);
+    .cart-toast.show {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     @media (max-width: 620px) {
@@ -343,15 +328,12 @@
         grid-template-columns: 1fr;
       }
 
-      .cart-controls,
-      .cart-actions {
+      .cart-controls {
         flex-direction: column;
       }
 
       .qty-input,
-      .add-cart-btn,
-      .whatsapp-order-btn,
-      .clear-cart-btn {
+      .add-cart-btn {
         width: 100%;
       }
     }
@@ -365,6 +347,8 @@
       <a href="productpage.html" class="active">Products</a>
       <a href="aboutpage.html">About</a>
       <a href="contactpage.html">Contact</a>
+      <a href="faq.html">FAQ</a>
+      <a href="admin.html">Admin</a>
     </nav>
   </header>
 
@@ -393,10 +377,18 @@
       <button class="filter-btn" data-category="men" type="button">Men Care</button>
       <button class="filter-btn" data-category="brain" type="button">Brain & Energy</button>
       <button class="filter-btn" data-category="nutrition" type="button">Nutrition</button>
+      <button class="filter-btn" data-category="farm" type="button">Farm Fertilizer</button>
     </div>
 
     <div id="catalogHint" class="catalog-hint">
       Need more items? Use search and <a id="fullCatalogLink" href="https://greenworld.com.ng/shop/" target="_blank" rel="noopener noreferrer">open full Green World catalog</a>.
+    </div>
+
+    <div class="cart-entry">
+      <button id="openCartBtn" class="cart-open-btn" type="button" aria-label="Open cart page">
+        Cart Page
+        <span id="cartCountBadge" class="cart-count-badge">0</span>
+      </button>
     </div>
 
     <div id="productsGrid" class="products-grid">
@@ -411,39 +403,64 @@
       <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2022/08/green-world-ginkgo-biloba-864361-300x300.webp" alt="Ginkgo Biloba Capsule"><div class="product-info"><h3>Green World Ginkgo Biloba Capsule (500mg x 60)</h3><p class="product-desc">Supports blood circulation and cognition.</p><p class="product-price">Price: NGN 34,298</p></div></div>
       <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2022/12/protein-2-1-300x300.webp" alt="Green World Protein Powder"><div class="product-info"><h3>Green World Protein Powder</h3><p class="product-desc">Nutrition and body strength support.</p><p class="product-price">Price: NGN 37,450</p></div></div>
       <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2023/05/Norland-Cordyceps-Coffee-300x300.webp" alt="Healthway Cordyceps Coffee"><div class="product-info"><h3>Healthway Cordyceps Coffee (20g x 15)</h3><p class="product-desc">Coffee blend for energy and daily wellness.</p><p class="product-price">Price: NGN 24,400</p></div></div><div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2023/05/green-world-ganoderma-plus-capsule-337670.webp" alt="Ganoderma Plus Capsule"><div class="product-info"><h3>Ganoderma Plus Capsule (300mg x 60)</h3><p class="product-desc">Immune support and general wellness formula.</p><p class="product-price">Price: NGN 41,150</p></div></div>
-      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2024/10/Green-World-Cardio-Power-capsule-danshen-combo-capsules-1.webp" alt="Cardio Power Capsule" loading="lazy"><div class="product-info"><h3>Cardio Power Capsule (300mg x 30)</h3><p class="product-desc">Triple defense support for heart health and circulation.</p><p class="product-price">Price: NGN 35,000</p></div></div>
-      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2024/10/green-world-multivitamin-tablets-1000mg-100-tablets.webp" alt="Green World Multivitamin Tablet" loading="lazy"><div class="product-info"><h3>Green World Multivitamin Tablet (1000mg x 100)</h3><p class="product-desc">Daily vitamin support for energy, immunity, and metabolism.</p><p class="product-price">Price: NGN 29,500</p></div></div>
-      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2024/10/green-world-garlic-oil-capsule-360mg.webp" alt="Green World Garlic Oil Capsule" loading="lazy"><div class="product-info"><h3>Green World Garlic Oil Capsule (360mg x 60)</h3><p class="product-desc">Cardiovascular and immune wellness support capsule.</p><p class="product-price">Price: NGN 28,900</p></div></div>
+      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2024/10/Green-World-Cardio-Power-capsule-danshen-combo-capsules-1.webp" alt="Cardio Power Capsule" loading="lazy"><div class="product-info"><h3>Cardio Power Capsule (300mg x 30)</h3><p class="product-desc">Triple defense support for heart health and circulation.</p><p class="product-price">Price: NGN 31,500</p></div></div>
+      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2024/10/green-world-multivitamin-tablets-1000mg-100-tablets.webp" alt="Green World Multivitamin Tablet" loading="lazy"><div class="product-info"><h3>Green World Multivitamin Tablet (1000mg x 100)</h3><p class="product-desc">Daily vitamin support for energy, immunity, and metabolism.</p><p class="product-price">Price: NGN 26,900</p></div></div>
+      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2024/10/green-world-garlic-oil-capsule-360mg.webp" alt="Green World Garlic Oil Capsule" loading="lazy"><div class="product-info"><h3>Green World Garlic Oil Capsule (360mg x 60)</h3><p class="product-desc">Cardiovascular and immune wellness support capsule.</p><p class="product-price">Price: NGN 35,500</p></div></div>
       <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2024/10/green-world-in-cleansing-tea-4g-16-sachets.webp" alt="Intestine Cleansing Tea" loading="lazy"><div class="product-info"><h3>Intestine Cleansing Tea</h3><p class="product-desc">Supports bowel movement, digestion, and detox routine.</p><p class="product-price">Price: NGN 21,500</p></div></div>
-      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2024/10/green-world-deep-sea-fish-oil-bottle.webp" alt="Deep Sea Fish Oil" loading="lazy"><div class="product-info"><h3>Deep Sea Fish Oil (1000mg x 100)</h3><p class="product-desc">Omega-3 supplement for heart, brain, and eye support.</p><p class="product-price">Price: NGN 31,000</p></div></div>
-      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2024/10/Green-World-Soy-Power-Capsule-Isoflavones-.webp" alt="Soy Power Capsule" loading="lazy"><div class="product-info"><h3>Soy Power Capsule (Isoflavones)</h3><p class="product-desc">Women hormonal balance and menopausal support formula.</p><p class="product-price">Price: NGN 33,900</p></div></div>
-      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2023/10/green-world-compound-co-q10-capsule-614531-1.webp" alt="Co-Q10 Capsule" loading="lazy"><div class="product-info"><h3>Co-Q10 Capsule (500mg x 60)</h3><p class="product-desc">Antioxidant support for heart, brain, and cellular protection.</p><p class="product-price">Price: NGN 34,500</p></div></div>
-      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2022/11/aloe-vera-capsules-for-constipation-obesity-and-anti-aging-245641.webp" alt="Morefuture Aloe Vera Capsules" loading="lazy"><div class="product-info"><h3>Morefuture Aloe Vera Capsules</h3><p class="product-desc">Digestive, skin, and detox support for complete wellness.</p><p class="product-price">Price: NGN 27,800</p></div></div>
-      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2024/08/B-carotene-and-Lycopene.webp" alt="Beta-Carotene & Lycopene Capsule" loading="lazy"><div class="product-info"><h3>Beta-Carotene & Lycopene Capsule</h3><p class="product-desc">Antioxidant formula for eye, heart, and immune support.</p><p class="product-price">Price: NGN 32,700</p></div></div>
-      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2023/03/s-zoom.webp" alt="Lipid Care Tea" loading="lazy"><div class="product-info"><h3>Lipid Care Tea (2g x 20 Sachets)</h3><p class="product-desc">Supports healthy cholesterol and cardiovascular wellness.</p><p class="product-price">Price: NGN 23,800</p></div></div>
-      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2024/12/Morefuture-Lightness-Slimming-Tea.webp" alt="Pro Slimming Tea" loading="lazy"><div class="product-info"><h3>Pro Slimming Tea (20 Sachets)</h3><p class="product-desc">Weight-management tea blend for metabolism and body balance.</p><p class="product-price">Price: NGN 24,900</p></div></div>
-      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2023/10/20160707120736_13554-1.webp" alt="Kuding Tea Plus" loading="lazy"><div class="product-info"><h3>Kuding Tea Plus (20 Sachets)</h3><p class="product-desc">Refreshing herbal tea to support blood pressure and circulation.</p><p class="product-price">Price: NGN 25,500</p></div></div>
-      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2023/05/Screenshot-2023-11-10-at-11.12.01.webp" alt="Energy Tea" loading="lazy"><div class="product-info"><h3>Energy Tea (20 Sachets)</h3><p class="product-desc">Herbal energy and immunity tea for daily vitality support.</p><p class="product-price">Price: NGN 24,300</p></div></div>
-      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2022/12/Screenshot-2023-11-10-at-12.51.16.webp" alt="Bitter Buckwheat Tea" loading="lazy"><div class="product-info"><h3>Bitter Buckwheat Tea (4g x 20 Sachets)</h3><p class="product-desc">Tea blend for blood sugar, blood lipid, and weight support.</p><p class="product-price">Price: NGN 26,400</p></div></div>
+      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2024/10/green-world-deep-sea-fish-oil-bottle.webp" alt="Deep Sea Fish Oil" loading="lazy"><div class="product-info"><h3>Deep Sea Fish Oil (1000mg x 100)</h3><p class="product-desc">Omega-3 supplement for heart, brain, and eye support.</p><p class="product-price">Price: NGN 35,600</p></div></div>
+      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2024/10/Green-World-Soy-Power-Capsule-Isoflavones-.webp" alt="Soy Power Capsule" loading="lazy"><div class="product-info"><h3>Soy Power Capsule (Isoflavones)</h3><p class="product-desc">Women hormonal balance and menopausal support formula.</p><p class="product-price">Price: NGN 28,700</p></div></div>
+      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2023/10/green-world-compound-co-q10-capsule-614531-1.webp" alt="Co-Q10 Capsule" loading="lazy"><div class="product-info"><h3>Co-Q10 Capsule (500mg x 60)</h3><p class="product-desc">Antioxidant support for heart, brain, and cellular protection.</p><p class="product-price">Price: NGN 39,700</p></div></div>
+      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2022/11/aloe-vera-capsules-for-constipation-obesity-and-anti-aging-245641.webp" alt="Morefuture Aloe Vera Capsules" loading="lazy"><div class="product-info"><h3>Morefuture Aloe Vera Capsules</h3><p class="product-desc">Digestive, skin, and detox support for complete wellness.</p><p class="product-price">Price: NGN 25,050</p></div></div>
+      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2024/08/B-carotene-and-Lycopene.webp" alt="Beta-Carotene & Lycopene Capsule" loading="lazy"><div class="product-info"><h3>Beta-Carotene & Lycopene Capsule</h3><p class="product-desc">Antioxidant formula for eye, heart, and immune support.</p><p class="product-price">Price: NGN 33,700</p></div></div>
+      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2023/03/s-zoom.webp" alt="Lipid Care Tea" loading="lazy"><div class="product-info"><h3>Lipid Care Tea (2g x 20 Sachets)</h3><p class="product-desc">Supports healthy cholesterol and cardiovascular wellness.</p><p class="product-price">Price: NGN 21,500</p></div></div>
+      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2024/12/Morefuture-Lightness-Slimming-Tea.webp" alt="Pro Slimming Tea" loading="lazy"><div class="product-info"><h3>Pro Slimming Tea (20 Sachets)</h3><p class="product-desc">Weight-management tea blend for metabolism and body balance.</p><p class="product-price">Price: NGN 21,500</p></div></div>
+      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2023/10/20160707120736_13554-1.webp" alt="Kuding Tea Plus" loading="lazy"><div class="product-info"><h3>Kuding Tea Plus (20 Sachets)</h3><p class="product-desc">Refreshing herbal tea to support blood pressure and circulation.</p><p class="product-price">Price: NGN 21,600</p></div></div>
+      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2023/05/Screenshot-2023-11-10-at-11.12.01.webp" alt="Energy Tea" loading="lazy"><div class="product-info"><h3>Energy Tea (20 Sachets)</h3><p class="product-desc">Herbal energy and immunity tea for daily vitality support.</p><p class="product-price">Price: NGN 25,300</p></div></div>
+      <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2022/12/Screenshot-2023-11-10-at-12.51.16.webp" alt="Bitter Buckwheat Tea" loading="lazy"><div class="product-info"><h3>Bitter Buckwheat Tea (4g x 20 Sachets)</h3><p class="product-desc">Tea blend for blood sugar, blood lipid, and weight support.</p><p class="product-price">Price: NGN 25,000</p></div></div>
       <div class="product-card"><img src="https://greenworld.com.ng/wp-content/uploads/2025/09/De-Diafix-Tea.webp" alt="NRI De-Diafix Tea" loading="lazy"><div class="product-info"><h3>NRI De-Diafix Tea (20 Sachets)</h3><p class="product-desc">Natural blood sugar support tea for glucose wellness.</p><p class="product-price">Price: NGN 24,700</p></div></div>
+      <div class="product-card"><img src="./fertilizer-small.jpg" alt="Green World Fertilizer Small Pack" loading="lazy"><div class="product-info"><h3>Green World Bio Organic Fertilizer - Small Pack (10kg)</h3><p class="product-desc">Balanced farm fertilizer for vegetables, maize, cassava, and seedlings. Great for home gardens and small farms.</p><p class="product-price">Price: NGN 18,500</p></div></div>
+      <div class="product-card"><img src="./fertilizer-big.jpg" alt="Green World Fertilizer Big Pack" loading="lazy"><div class="product-info"><h3>Green World Bio Organic Fertilizer - Big Pack (25kg)</h3><p class="product-desc">Large-size pack for commercial use. Supports root growth, greener leaves, and stronger crop yield across larger farm areas.</p><p class="product-price">Price: NGN 41,500</p></div></div>
     </div>
 
-    <div class="cart-panel">
-      <h3>Your Cart</h3>
-      <ul id="cartItems"><li>No items added yet.</li></ul>
-      <p id="cartSummary">Total items: 0 | Total amount: NGN 0</p>
-      <div class="cart-actions">
-        <button class="whatsapp-order-btn" onclick="sendCartToWhatsApp()">Order on WhatsApp</button>
-        <button class="clear-cart-btn" onclick="clearCart()">Clear Cart</button>
-      </div>
+    <div class="catalog-hint" style="margin-top: 1rem;">
+      <strong>Farm Fertilizer Guide:</strong>
+      Apply near root zone and water after application. For seedlings use small dose first, then increase gradually after 2-3 weeks. Always store fertilizer in a cool dry place and close bag tightly after use.
     </div>
+
+    <div id="cartToast" class="cart-toast" aria-live="polite"></div>
   </main>
 
-  <script>
+  <script type="module">
+    import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, collection, getDocs, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBnpg1zVQr2-mEPwet80zNExFaPEjls4Hc",
+      authDomain: "green-world-project.firebaseapp.com",
+      projectId: "green-world-project",
+      storageBucket: "green-world-project.firebasestorage.app",
+      messagingSenderId: "1096759081626",
+      appId: "1:1096759081626:web:1f15a558d2bfcad1b7bd23"
+    };
+
+    const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
     const cart = {};
+    const CART_STORAGE_KEY = "green_world_cart";
+    const PRODUCT_OVERRIDE_COLLECTION = "product_overrides";
+    let toastTimer = null;
+    let syncTimer = null;
+    let currentUser = null;
     let activeCategory = "all";
     let activeSort = "default";
     let activeSearch = "";
+
+    const openCartBtn = document.getElementById("openCartBtn");
+    const cartCountBadge = document.getElementById("cartCountBadge");
+    const cartToast = document.getElementById("cartToast");
 
     const categoryByName = [
       { test: /women|kidney/i, category: "women", tag: "Women Care" },
@@ -451,6 +468,7 @@
       { test: /tea|coffee|kuding|diafix|lipid care|pro slimming|buckwheat|energy tea|balsam pear tea|intestine cleansing/i, category: "tea", tag: "Tea & Drinks" },
       { test: /brain|ginkgo|cardio|co-q10|coq10/i, category: "brain", tag: "Brain & Energy" },
       { test: /protein|zinc|livergen|multivitamin|fish oil|beta|lycopene|aloe vera/i, category: "nutrition", tag: "Nutrition" },
+      { test: /fertilizer|bio organic|farm/i, category: "farm", tag: "Farm Fertilizer" },
       { test: /balsam|glucoblock|pear|intestine/i, category: "metabolism", tag: "Metabolism" },
       { test: /soy power/i, category: "women", tag: "Women Care" }
     ];
@@ -460,13 +478,106 @@
       return Number(numeric || 0);
     }
 
-    function formatNGN(amount) {
-      return "NGN " + amount.toLocaleString("en-NG");
+    function getTotalQty(items) {
+      return items.reduce((sum, item) => sum + item.quantity, 0);
+    }
+
+    function saveCartLocal() {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+    }
+
+    function hydrateCartLocal() {
+      const raw = localStorage.getItem(CART_STORAGE_KEY);
+      if (!raw) return;
+      try {
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== "object") return;
+        Object.keys(parsed).forEach((key) => {
+          const item = parsed[key];
+          if (!item || !item.name || !item.quantity) return;
+          cart[key] = item;
+        });
+      } catch (error) {
+        console.warn("Unable to read saved cart.", error);
+      }
+    }
+
+    async function pushCartToRemote() {
+      if (!currentUser) return;
+      try {
+        await setDoc(doc(db, "carts", currentUser.uid), {
+          items: cart,
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+      } catch (error) {
+        console.warn("Remote cart sync failed.", error);
+      }
+    }
+
+    function scheduleRemoteSync() {
+      if (!currentUser) return;
+      if (syncTimer) clearTimeout(syncTimer);
+      syncTimer = setTimeout(() => {
+        pushCartToRemote();
+      }, 700);
+    }
+
+    async function hydrateRemoteCart() {
+      if (!currentUser) return;
+      try {
+        const snap = await getDoc(doc(db, "carts", currentUser.uid));
+        const remoteItems = snap.exists() ? (snap.data().items || {}) : {};
+        const localHasItems = Object.keys(cart).length > 0;
+        const remoteHasItems = Object.keys(remoteItems).length > 0;
+
+        if (!localHasItems && remoteHasItems) {
+          Object.keys(remoteItems).forEach((key) => {
+            cart[key] = remoteItems[key];
+          });
+          renderCart();
+        } else if (localHasItems) {
+          pushCartToRemote();
+        }
+      } catch (error) {
+        console.warn("Unable to load remote cart.", error);
+      }
+    }
+
+    async function applyPriceOverrides() {
+      try {
+        const snap = await getDocs(collection(db, PRODUCT_OVERRIDE_COLLECTION));
+        if (snap.empty) return;
+        const overrideMap = new Map();
+        snap.forEach((item) => {
+          const data = item.data();
+          if (!data?.name || !data?.price) return;
+          overrideMap.set(String(data.name).trim().toLowerCase(), Number(data.price));
+        });
+
+        document.querySelectorAll(".product-card").forEach((card) => {
+          const nameEl = card.querySelector(".product-info h3");
+          const priceEl = card.querySelector(".product-price");
+          if (!nameEl || !priceEl) return;
+          const nameKey = nameEl.textContent.trim().toLowerCase();
+          if (!overrideMap.has(nameKey)) return;
+          const overriddenPrice = overrideMap.get(nameKey);
+          priceEl.textContent = `Price: NGN ${overriddenPrice.toLocaleString("en-NG")}`;
+        });
+      } catch (error) {
+        console.warn("Unable to apply product price overrides.", error);
+      }
+    }
+
+    function showCartToast(message) {
+      if (!cartToast) return;
+      cartToast.textContent = message;
+      cartToast.classList.add("show");
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => cartToast.classList.remove("show"), 1600);
     }
 
     function setupProductCards() {
       const cards = document.querySelectorAll(".product-card");
-
       cards.forEach((card) => {
         const nameEl = card.querySelector(".product-info h3");
         const descEl = card.querySelector(".product-desc");
@@ -484,13 +595,11 @@
         card.dataset.price = String(unitPrice);
 
         const mapped = categoryByName.find((item) => item.test.test(name));
-        const category = mapped ? mapped.category : "nutrition";
-        const tag = mapped ? mapped.tag : "Nutrition";
-        card.dataset.category = category;
+        card.dataset.category = mapped ? mapped.category : "nutrition";
 
         const tagEl = document.createElement("span");
         tagEl.className = "product-tag";
-        tagEl.textContent = tag;
+        tagEl.textContent = mapped ? mapped.tag : "Nutrition";
         info.insertBefore(tagEl, info.firstChild);
 
         const controls = document.createElement("div");
@@ -502,23 +611,20 @@
 
         const qtyInput = controls.querySelector(".qty-input");
         const addBtn = controls.querySelector(".add-cart-btn");
-
         addBtn.addEventListener("click", () => {
           const quantity = parseInt(qtyInput.value, 10);
           if (!quantity || quantity < 1) {
             alert("Enter a valid quantity.");
             return;
           }
-
           if (!cart[name]) {
             cart[name] = { name, details, priceText, unitPrice, quantity: 0 };
           }
-
           cart[name].quantity += quantity;
           qtyInput.value = "1";
           renderCart();
+          showCartToast(`${name} added to cart (x${quantity}).`);
         });
-
         info.appendChild(controls);
       });
     }
@@ -526,13 +632,9 @@
     function applyProductView() {
       const grid = document.getElementById("productsGrid");
       const cards = Array.from(grid.querySelectorAll(".product-card"));
-
       cards.forEach((card) => {
         const matchesCategory = activeCategory === "all" || card.dataset.category === activeCategory;
-        const matchesSearch =
-          !activeSearch ||
-          card.dataset.name.includes(activeSearch) ||
-          card.dataset.desc.includes(activeSearch);
+        const matchesSearch = !activeSearch || card.dataset.name.includes(activeSearch) || card.dataset.desc.includes(activeSearch);
         card.style.display = matchesCategory && matchesSearch ? "" : "none";
       });
 
@@ -547,24 +649,20 @@
       if (activeSort !== "default") {
         visibleCards.sort(sorter).forEach((card) => grid.appendChild(card));
       }
-
       updateCatalogHint(visibleCards.length);
     }
 
     function updateCatalogHint(localCount) {
       const hint = document.getElementById("catalogHint");
-      const fullCatalogLink = document.getElementById("fullCatalogLink");
       const term = activeSearch.trim();
       const target = term
         ? `https://greenworld.com.ng/?s=${encodeURIComponent(term)}&post_type=product`
         : "https://greenworld.com.ng/shop/";
-      fullCatalogLink.href = target;
 
       if (!term) {
         hint.innerHTML = `Need more items? Use search and <a id="fullCatalogLink" href="${target}" target="_blank" rel="noopener noreferrer">open full Green World catalog</a>.`;
         return;
       }
-
       if (localCount === 0) {
         hint.innerHTML = `No exact match locally for "<strong>${term}</strong>". <a id="fullCatalogLink" href="${target}" target="_blank" rel="noopener noreferrer">Search all official products online</a>.`;
       } else {
@@ -598,73 +696,40 @@
     }
 
     function renderCart() {
-      const cartItems = document.getElementById("cartItems");
-      const cartSummary = document.getElementById("cartSummary");
-      const items = Object.values(cart);
-
-      if (items.length === 0) {
-        cartItems.innerHTML = "<li>No items added yet.</li>";
-        cartSummary.textContent = "Total items: 0 | Total amount: NGN 0";
-        return;
-      }
-
-      cartItems.innerHTML = items
-        .map((item) => {
-          const subtotal = item.unitPrice * item.quantity;
-          return `<li><strong>${item.name}</strong> - Qty: ${item.quantity}<br><small>${item.details}</small><br><small>Unit: ${item.priceText} | Subtotal: ${formatNGN(subtotal)}</small><br><button type="button" class="remove-item-btn" onclick="removeItemFromCart('${item.name.replace(/'/g, "\\'")}')">Remove</button></li>`;
-        })
-        .join("");
-
-      const totalQty = items.reduce((sum, item) => sum + item.quantity, 0);
-      const totalAmount = items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
-      cartSummary.textContent = `Total items: ${totalQty} | Total amount: ${formatNGN(totalAmount)}`;
+      const totalQty = getTotalQty(Object.values(cart));
+      cartCountBadge.textContent = String(totalQty);
+      saveCartLocal();
+      scheduleRemoteSync();
     }
 
-    function sendCartToWhatsApp() {
-      const items = Object.values(cart);
-      if (items.length === 0) {
-        alert("Your cart is empty. Add products first.");
-        return;
-      }
+    openCartBtn.addEventListener("click", () => {
+      window.location.href = "cart.html";
+    });
 
-      const phone = "2347067065524";
-      const lines = items.map((item, index) => {
-        const subtotal = item.unitPrice * item.quantity;
-        return `${index + 1}. ${item.name} | Qty: ${item.quantity} | Unit: ${item.priceText} | Subtotal: ${formatNGN(subtotal)}`;
-      });
+    onAuthStateChanged(auth, async (user) => {
+      currentUser = user;
+      if (!user) return;
+      await hydrateRemoteCart();
+    });
 
-      const totalQty = items.reduce((sum, item) => sum + item.quantity, 0);
-      const totalAmount = items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
-
-      const message = [
-        "Hello MRS Oni, Green World Distributor.",
-        "",
-        "I want to place an order:",
-        ...lines,
-        "",
-        `Total Items: ${totalQty}`,
-        `Total Amount: ${formatNGN(totalAmount)}`
-      ].join("\n");
-
-      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, "_blank");
-    }
-
-    function clearCart() {
-      Object.keys(cart).forEach((key) => delete cart[key]);
+    async function init() {
+      await applyPriceOverrides();
+      hydrateCartLocal();
+      setupProductCards();
+      setupFiltersAndSearch();
+      applyProductView();
       renderCart();
     }
 
-    function removeItemFromCart(name) {
-      if (!cart[name]) return;
-      delete cart[name];
-      renderCart();
-    }
-
-    setupProductCards();
-    setupFiltersAndSearch();
-    applyProductView();
-    renderCart();
+    init();
   </script>
+  <footer style="text-align:center; padding:16px 10px 24px; color:#e9fff8; background:linear-gradient(120deg,#063f37,#0e6e61); font-weight:700;">
+    &copy; 2026 Oni Christianah Folashade | Green World Distributor<br>
+    <a href="privacy-policy.html" style="color:#b2dfdb; text-decoration:none; margin:0 8px;">Privacy Policy</a>
+    <a href="terms-conditions.html" style="color:#b2dfdb; text-decoration:none; margin:0 8px;">Terms</a>
+    <a href="delivery-returns.html" style="color:#b2dfdb; text-decoration:none; margin:0 8px;">Delivery & Returns</a>
+    <a href="faq.html" style="color:#b2dfdb; text-decoration:none; margin:0 8px;">FAQ</a>
+  </footer>
 </body>
 </html>
 

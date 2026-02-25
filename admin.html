@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Control | Green World</title>
+  <style>
+    :root { --brand:#0b7d69; --brandDark:#065a4b; --bg:#eef7f4; --line:#d7eae4; --text:#0c3f35; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif; background:var(--bg); color:var(--text); }
+    header { background:linear-gradient(120deg,var(--brandDark),var(--brand)); color:#fff; padding:1rem; display:flex; justify-content:space-between; gap:.8rem; align-items:center; flex-wrap:wrap; }
+    nav { display:flex; gap:.5rem; flex-wrap:wrap; }
+    nav a { color:#fff; text-decoration:none; font-weight:700; padding:.42rem .72rem; border-radius:8px; }
+    nav a:hover, nav a.active { background:rgba(255,255,255,.18); }
+    main { max-width:900px; margin:0 auto; padding:1rem; }
+    .panel { background:#fff; border:1px solid var(--line); border-radius:12px; padding:1rem; box-shadow:0 8px 20px rgba(6,90,75,.1); margin-bottom:1rem; }
+    h1, h2 { margin-top:0; }
+    label { display:block; font-weight:700; margin:.7rem 0 .3rem; }
+    select, input { width:100%; padding:.6rem .7rem; border:1px solid #b8d8cf; border-radius:9px; font:inherit; }
+    .row { display:grid; grid-template-columns:1fr 160px; gap:.6rem; }
+    button { border:none; border-radius:9px; padding:.7rem .9rem; cursor:pointer; font-weight:700; }
+    .primary { background:var(--brand); color:#fff; }
+    .danger { background:#b42318; color:#fff; }
+    .muted { color:#406f65; }
+    .item { border:1px solid var(--line); border-radius:10px; padding:.7rem; margin-bottom:.55rem; display:flex; justify-content:space-between; align-items:center; gap:.6rem; }
+    .hidden { display:none; }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>Green World Admin Control</strong>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="productpage.html">Products</a>
+      <a href="admin.html" class="active">Admin</a>
+    </nav>
+  </header>
+  <main>
+    <section id="accessDenied" class="panel hidden">
+      <h1>Access Denied</h1>
+      <p class="muted">Only approved admin account can manage product prices.</p>
+      <p class="muted" id="adminEmailDebug"></p>
+    </section>
+
+    <section id="adminPanel" class="panel hidden">
+      <h1>Price Admin</h1>
+      <p class="muted">Set product price override for website display. Changes reflect on product page.</p>
+      <label for="productName">Product</label>
+      <select id="productName"></select>
+      <label for="productPrice">New Price (NGN)</label>
+      <input id="productPrice" type="number" min="1" step="1" placeholder="e.g. 32500">
+      <div style="margin-top:.8rem;">
+        <button id="saveBtn" class="primary" type="button">Save Price Override</button>
+      </div>
+    </section>
+
+    <section id="overrideListPanel" class="panel hidden">
+      <h2>Current Overrides</h2>
+      <div id="overrideList"></div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBnpg1zVQr2-mEPwet80zNExFaPEjls4Hc",
+      authDomain: "green-world-project.firebaseapp.com",
+      projectId: "green-world-project",
+      storageBucket: "green-world-project.firebasestorage.app",
+      messagingSenderId: "1096759081626",
+      appId: "1:1096759081626:web:1f15a558d2bfcad1b7bd23"
+    };
+
+    const ADMIN_EMAILS = [
+      "onifolashade@gmail.com",
+      "christianah.oni@gmail.com",
+      "onigordon157@gmail.com"
+    ];
+    const PRODUCT_OVERRIDE_COLLECTION = "product_overrides";
+    const PRODUCT_NAMES = [
+      "Balsam Pear Tablet",
+      "Green World Balsam Pear Tea (20 Sachets)",
+      "Green World Glucoblock (500mg, 30 Caps)",
+      "Kidney Tonifying Capsule for Women (500mg x 100)",
+      "Green World Vigpower Capsule (300mg x 6)",
+      "Greenworld Zinc Tablet",
+      "Livergen Capsule (60 Caps)",
+      "Green World Brain Care Capsule (350mg x 30)",
+      "Green World Ginkgo Biloba Capsule (500mg x 60)",
+      "Green World Protein Powder",
+      "Healthway Cordyceps Coffee (20g x 15)",
+      "Ganoderma Plus Capsule (300mg x 60)",
+      "Cardio Power Capsule (300mg x 30)",
+      "Green World Multivitamin Tablet (1000mg x 100)",
+      "Green World Garlic Oil Capsule (360mg x 60)",
+      "Intestine Cleansing Tea",
+      "Deep Sea Fish Oil (1000mg x 100)",
+      "Soy Power Capsule (Isoflavones)",
+      "Co-Q10 Capsule (500mg x 60)",
+      "Morefuture Aloe Vera Capsules",
+      "Beta-Carotene & Lycopene Capsule",
+      "Lipid Care Tea (2g x 20 Sachets)",
+      "Pro Slimming Tea (20 Sachets)",
+      "Kuding Tea Plus (20 Sachets)",
+      "Energy Tea (20 Sachets)",
+      "Bitter Buckwheat Tea (4g x 20 Sachets)",
+      "NRI De-Diafix Tea (20 Sachets)",
+      "Green World Bio Organic Fertilizer - Small Pack (10kg)",
+      "Green World Bio Organic Fertilizer - Big Pack (25kg)"
+    ];
+
+    const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const accessDenied = document.getElementById("accessDenied");
+    const adminEmailDebug = document.getElementById("adminEmailDebug");
+    const adminPanel = document.getElementById("adminPanel");
+    const overrideListPanel = document.getElementById("overrideListPanel");
+    const productName = document.getElementById("productName");
+    const productPrice = document.getElementById("productPrice");
+    const saveBtn = document.getElementById("saveBtn");
+    const overrideList = document.getElementById("overrideList");
+
+    PRODUCT_NAMES.forEach((name) => {
+      const option = document.createElement("option");
+      option.value = name;
+      option.textContent = name;
+      productName.appendChild(option);
+    });
+
+    function makeDocId(name) {
+      return name.toLowerCase().replaceAll(/[^a-z0-9]+/g, "_").replaceAll(/^_+|_+$/g, "");
+    }
+
+    async function loadOverrides() {
+      try {
+        const snap = await getDocs(collection(db, PRODUCT_OVERRIDE_COLLECTION));
+        if (snap.empty) {
+          overrideList.innerHTML = `<p class="muted">No overrides yet.</p>`;
+          return;
+        }
+        const html = [];
+        snap.forEach((item) => {
+          const data = item.data();
+          html.push(`
+            <div class="item">
+              <div>
+                <strong>${data.name}</strong><br>
+                <span class="muted">NGN ${Number(data.price).toLocaleString("en-NG")}</span>
+              </div>
+              <button class="danger" data-doc="${item.id}">Delete</button>
+            </div>
+          `);
+        });
+        overrideList.innerHTML = html.join("");
+        overrideList.querySelectorAll("button[data-doc]").forEach((btn) => {
+          btn.addEventListener("click", async () => {
+            try {
+              await deleteDoc(doc(db, PRODUCT_OVERRIDE_COLLECTION, btn.dataset.doc));
+              await loadOverrides();
+            } catch (error) {
+              console.warn("Could not delete override.", error);
+              alert("Delete failed. Check internet or Firestore rules.");
+            }
+          });
+        });
+      } catch (error) {
+        console.warn("Could not load overrides.", error);
+        overrideList.innerHTML = `<p class="muted">Unable to load overrides now.</p>`;
+      }
+    }
+
+    saveBtn.addEventListener("click", async () => {
+      const name = productName.value.trim();
+      const price = Number(productPrice.value || 0);
+      if (!name || price <= 0) {
+        alert("Choose product and enter valid price.");
+        return;
+      }
+      const docId = makeDocId(name);
+      try {
+        await setDoc(doc(db, PRODUCT_OVERRIDE_COLLECTION, docId), {
+          name,
+          price,
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+        productPrice.value = "";
+        await loadOverrides();
+        alert("Price override saved.");
+      } catch (error) {
+        console.warn("Could not save override.", error);
+        alert("Save failed. Check internet or Firestore rules.");
+      }
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+      const email = (user?.email || "").toLowerCase();
+      const canAccess = ADMIN_EMAILS.includes(email);
+      if (!canAccess) {
+        adminEmailDebug.textContent = user
+          ? `Signed in as: ${user.email}`
+          : "You are not signed in. Please login first.";
+        accessDenied.classList.remove("hidden");
+        adminPanel.classList.add("hidden");
+        overrideListPanel.classList.add("hidden");
+        return;
+      }
+      accessDenied.classList.add("hidden");
+      adminPanel.classList.remove("hidden");
+      overrideListPanel.classList.remove("hidden");
+      await loadOverrides();
+    });
+  </script>
+</body>
+</html>

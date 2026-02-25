@@ -4,13 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Oni Christianah Folashade - Green World Distributor</title>
+  <meta name="description" content="Official Green World Ore Branch website for wellness products, farm fertilizer, cart ordering, and WhatsApp support in Nigeria.">
+  <meta property="og:title" content="Green World Ore Branch">
+  <meta property="og:description" content="Shop Green World products, fertilizer packs, and order directly on WhatsApp.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://YOUR_DOMAIN_HERE/">
+  <meta name="robots" content="index, follow">
   <link rel="stylesheet" href="index.css">
   <!-- <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"> -->
-  <link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-/>
-
 <link
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -30,6 +31,8 @@
     <a href="./productpage.html" style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; transition:color 0.3s ease;">Products</a>
     <a href="./aboutpage.html" style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; transition:color 0.3s ease;">About</a>
     <a href="./contactpage.html" style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; transition:color 0.3s ease;">Contact</a>
+    <a href="./faq.html" style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; transition:color 0.3s ease;">FAQ</a>
+    <a href="./admin.html" style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; transition:color 0.3s ease;">Admin</a>
         <a href="./loginpage.html" style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; transition:color 0.3s ease;">Sign up</a>
        <a href="./loginpage.html" style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; transition:color 0.3s ease;">Logout</a>
         <!-- <button style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; font-size: 18px; transition:color 0.3s ease;border: thin solid #00796b; background-color: #00796b;" onclick="logout()"><a href="">Logout</a></button> -->
@@ -216,7 +219,10 @@
         <textarea id="testimonialComment" placeholder="Write your testimonial..." required></textarea>
         <button type="submit">Post Comment</button>
       </form>
+      <p id="testimonialStatus" class="testimonial-status" aria-live="polite"></p>
       <div id="testimonialList" class="testimonial-list"></div>
+      <div id="testimonialListMeta" class="testimonial-list-meta"></div>
+      <button id="testimonialToggleBtn" class="testimonial-toggle-btn" type="button" hidden>Show More</button>
     </div>
   </section>
 
@@ -339,7 +345,6 @@
     </div>
   </section>
 
-<!-- <script src="index.js"></script> -->
 <section class="contact-social">
   <h2>Contact Green World</h2>
   <p>Reach us directly on any platform</p>
@@ -351,12 +356,12 @@
     </a>
 
     <!-- INSTAGRAM -->
-    <a href="https://www.instagram.com/oni folashade" target="_blank" title="DM on Instagram">
+    <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" title="DM on Instagram">
       <i class="fab fa-instagram"></i>
     </a>
 
     <!-- FACEBOOK -->
-    <a href="https://www.facebook.com/oni folashade" target="_blank" title="Message on Facebook">
+    <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" title="Message on Facebook">
       <i class="fab fa-facebook"></i>
     </a>
 
@@ -369,18 +374,34 @@
 
   <!-- FOOTER -->
   <footer>
-    &copy; 2026 Oni Christianah Folashade | Green World Distributor
+    &copy; 2026 Oni Christianah Folashade | Green World Distributor<br>
+    <a href="./privacy-policy.html" style="color:#b2dfdb; text-decoration:none; margin:0 8px;">Privacy Policy</a>
+    <a href="./terms-conditions.html" style="color:#b2dfdb; text-decoration:none; margin:0 8px;">Terms</a>
+    <a href="./delivery-returns.html" style="color:#b2dfdb; text-decoration:none; margin:0 8px;">Delivery & Returns</a>
+    <a href="./faq.html" style="color:#b2dfdb; text-decoration:none; margin:0 8px;">FAQ</a>
+    <a href="./admin.html" style="color:#b2dfdb; text-decoration:none; margin:0 8px;">Admin</a>
   </footer>
 
 
  
 
 
-</body>
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from
 "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  doc,
+  addDoc,
+  deleteDoc,
+  query,
+  orderBy,
+  limit,
+  onSnapshot,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBnpg1zVQr2-mEPwet80zNExFaPEjls4Hc",
@@ -391,21 +412,31 @@ const firebaseConfig = {
   appId: "1:1096759081626:web:1f15a558d2bfcad1b7bd23"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+let app;
+let auth;
+let db;
 
-// 🚨 BLOCK PAGE UNTIL AUTH IS CHECKED
-onAuthStateChanged(auth, (user) => {
-  if (!user) {
-    window.location.replace("loginpage.html");
-  } else {
-    // ✅ User is logged in → show page
-    document.body.style.display = "block";
-  }
-});
+try {
+  app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getFirestore(app);
+} catch (error) {
+  console.error("Firebase init failed.", error);
+  document.body.style.display = "block";
+}
 
-// 🚪 LOGOUT
+if (auth) {
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      window.location.replace("loginpage.html");
+    } else {
+      document.body.style.display = "block";
+    }
+  });
+}
+
 window.logout = async () => {
+  if (!auth) return;
   await signOut(auth);
   window.location.replace("loginpage.html");
 };
@@ -414,7 +445,27 @@ const testimonialForm = document.getElementById("testimonialForm");
 const testimonialName = document.getElementById("testimonialName");
 const testimonialComment = document.getElementById("testimonialComment");
 const testimonialList = document.getElementById("testimonialList");
+const testimonialStatus = document.getElementById("testimonialStatus");
+const testimonialListMeta = document.getElementById("testimonialListMeta");
+const testimonialToggleBtn = document.getElementById("testimonialToggleBtn");
 const TESTIMONIAL_KEY = "green_world_testimonials";
+const TESTIMONIAL_COLLECTION = "testimonials";
+const TESTIMONIAL_PAGE_SIZE = 6;
+const TESTIMONIAL_LOCAL_MAX = 500;
+const BLOCKED_WORDS = [
+  "fuck",
+  "fucking",
+  "shit",
+  "bitch",
+  "bastard",
+  "asshole",
+  "idiot",
+  "stupid",
+  "fool",
+  "nonsense"
+];
+let allTestimonials = [];
+let visibleTestimonials = TESTIMONIAL_PAGE_SIZE;
 const wellnessFinderForm = document.getElementById("wellnessFinderForm");
 const goalSelect = document.getElementById("goalSelect");
 const budgetSelect = document.getElementById("budgetSelect");
@@ -474,6 +525,122 @@ function formatNGN(amount) {
   return `NGN ${amount.toLocaleString("en-NG")}`;
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function escapeRegex(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function maskWord(word) {
+  if (word.length <= 2) return "*".repeat(word.length);
+  return `${word[0]}${"*".repeat(word.length - 2)}${word[word.length - 1]}`;
+}
+
+function sanitizeAbusiveText(text) {
+  let cleaned = text;
+  let changed = false;
+  BLOCKED_WORDS.forEach((word) => {
+    const pattern = new RegExp(`\\b${escapeRegex(word)}\\b`, "gi");
+    cleaned = cleaned.replace(pattern, (match) => {
+      changed = true;
+      return maskWord(match);
+    });
+  });
+  return { cleaned, changed };
+}
+
+function setTestimonialStatus(message = "", type = "") {
+  if (!testimonialStatus) return;
+  testimonialStatus.textContent = message;
+  testimonialStatus.classList.remove("is-warning", "is-success");
+  if (type) testimonialStatus.classList.add(type);
+}
+
+function normalizeTestimonials(items) {
+  return (Array.isArray(items) ? items : [])
+    .map((item) => {
+      const createdAtRaw = item?.createdAt;
+      const createdAtClientRaw = item?.createdAtClient;
+      const createdAt = getTimestampMs(createdAtRaw);
+      const createdAtClient = getTimestampMs(createdAtClientRaw);
+      return {
+        id: item?.id || "",
+        name: String(item?.name || "Anonymous").trim(),
+        comment: String(item?.comment || "").trim(),
+        createdAt,
+        createdAtClient,
+        sortAt: Math.max(createdAt, createdAtClient)
+      };
+    })
+    .filter((item) => item.comment)
+    .sort((a, b) => {
+      if (b.sortAt !== a.sortAt) return b.sortAt - a.sortAt;
+      return b.id.localeCompare(a.id);
+    });
+}
+
+function getLocalItemKey(item) {
+  return `${item.createdAt || 0}::${item.createdAtClient || 0}::${item.name || ""}::${item.comment || ""}`;
+}
+
+function getTimestampMs(value) {
+  if (!value) return 0;
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  if (value instanceof Date) return value.getTime();
+  if (typeof value?.toMillis === "function") return value.toMillis();
+  if (typeof value?.seconds === "number") return value.seconds * 1000;
+  return 0;
+}
+
+function renderTestimonials() {
+  const total = allTestimonials.length;
+  const count = Math.min(visibleTestimonials, total);
+  const visibleItems = allTestimonials.slice(0, count);
+
+  testimonialList.innerHTML = visibleItems
+    .map((item, index) => `
+      <article class="user-testimonial">
+        <p>"${escapeHtml(item.comment || "")}"</p>
+        <cite>- ${escapeHtml(item.name || "Anonymous")}</cite>
+        <button
+          type="button"
+          class="testimonial-delete-btn"
+          data-visible-index="${index}"
+          aria-label="Delete this comment"
+        >Delete</button>
+      </article>
+    `)
+    .join("");
+
+  testimonialListMeta.textContent = total
+    ? `Showing ${count} of ${total} comments`
+    : "No user comments yet. Be the first to comment.";
+
+  const hasMoreThanOnePage = total > TESTIMONIAL_PAGE_SIZE;
+  testimonialToggleBtn.hidden = !hasMoreThanOnePage;
+  if (!hasMoreThanOnePage) return;
+
+  if (count >= total) {
+    testimonialToggleBtn.textContent = "Show Less";
+  } else {
+    testimonialToggleBtn.textContent = `Show More (${total - count} more)`;
+  }
+}
+
+function renderTestimonialsLocal() {
+  const items = normalizeTestimonials(JSON.parse(localStorage.getItem(TESTIMONIAL_KEY) || "[]"));
+  allTestimonials = items;
+  visibleTestimonials = TESTIMONIAL_PAGE_SIZE;
+  renderTestimonials();
+}
+
 wellnessFinderForm?.addEventListener("submit", (event) => {
   event.preventDefault();
   const goal = goalSelect.value;
@@ -518,35 +685,159 @@ newTipBtn?.addEventListener("click", () => {
   dailyTipText.textContent = nextTip;
 });
 
-function renderTestimonials() {
-  const items = JSON.parse(localStorage.getItem(TESTIMONIAL_KEY) || "[]");
-  testimonialList.innerHTML = items
-    .map((item) => `
-      <article class="user-testimonial">
-        <p>"${item.comment}"</p>
-        <cite>- ${item.name}</cite>
-      </article>
-    `)
-    .join("");
+function startTestimonialsSync() {
+  if (!db) {
+    renderTestimonialsLocal();
+    return;
+  }
+  try {
+    const testimonialsQuery = query(
+      collection(db, TESTIMONIAL_COLLECTION),
+      orderBy("createdAt", "desc"),
+      limit(200)
+    );
+
+    onSnapshot(testimonialsQuery, (snapshot) => {
+      const items = normalizeTestimonials(
+        snapshot.docs.map((snap) => ({ id: snap.id, ...snap.data() }))
+      );
+      allTestimonials = items;
+      visibleTestimonials = TESTIMONIAL_PAGE_SIZE;
+      renderTestimonials();
+    }, () => {
+      renderTestimonialsLocal();
+    });
+  } catch (error) {
+    console.warn("Firestore testimonial sync unavailable.", error);
+    renderTestimonialsLocal();
+  }
 }
 
-testimonialForm?.addEventListener("submit", (event) => {
+testimonialToggleBtn?.addEventListener("click", () => {
+  if (visibleTestimonials >= allTestimonials.length) {
+    visibleTestimonials = TESTIMONIAL_PAGE_SIZE;
+  } else {
+    visibleTestimonials = Math.min(allTestimonials.length, visibleTestimonials + TESTIMONIAL_PAGE_SIZE);
+  }
+  renderTestimonials();
+});
+
+testimonialList?.addEventListener("click", async (event) => {
+  const btn = event.target.closest(".testimonial-delete-btn");
+  if (!btn) return;
+  const visibleIndex = Number(btn.dataset.visibleIndex);
+  if (Number.isNaN(visibleIndex)) return;
+  const item = allTestimonials[visibleIndex];
+  if (!item) return;
+  if (!window.confirm("Delete this comment?")) return;
+
+  if (db && item.id) {
+    try {
+      await deleteDoc(doc(db, TESTIMONIAL_COLLECTION, item.id));
+      setTestimonialStatus("Comment deleted successfully.", "is-success");
+      return;
+    } catch (error) {
+      console.warn("Could not delete Firestore testimonial.", error);
+      setTestimonialStatus("Could not delete online comment. Trying local delete.", "is-warning");
+    }
+  }
+
+  try {
+    const localItems = normalizeTestimonials(JSON.parse(localStorage.getItem(TESTIMONIAL_KEY) || "[]"));
+    const targetKey = getLocalItemKey(item);
+    const nextItems = localItems.filter((entry) => getLocalItemKey(entry) !== targetKey);
+    localStorage.setItem(TESTIMONIAL_KEY, JSON.stringify(nextItems.slice(0, TESTIMONIAL_LOCAL_MAX)));
+    renderTestimonialsLocal();
+    setTestimonialStatus("Comment deleted successfully.", "is-success");
+  } catch (error) {
+    console.warn("Could not delete local testimonial.", error);
+    setTestimonialStatus("Delete failed. Please try again.", "is-warning");
+  }
+});
+
+function applyInputModeration(element) {
+  if (!element) return;
+  element.addEventListener("input", () => {
+    const original = element.value;
+    const { cleaned, changed } = sanitizeAbusiveText(original);
+    if (changed) {
+      element.value = cleaned;
+      setTestimonialStatus("Abusive words are not allowed and were automatically removed.", "is-warning");
+    }
+  });
+}
+
+applyInputModeration(testimonialName);
+applyInputModeration(testimonialComment);
+
+testimonialForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
   const name = testimonialName.value.trim();
   const comment = testimonialComment.value.trim();
   if (!name || !comment) return;
+  const cleanNameResult = sanitizeAbusiveText(name);
+  const cleanCommentResult = sanitizeAbusiveText(comment);
+  const cleanName = cleanNameResult.cleaned.trim();
+  const cleanComment = cleanCommentResult.cleaned.trim();
+  const wasModerated = cleanNameResult.changed || cleanCommentResult.changed;
+  if (!cleanName || !cleanComment) return;
 
-  const items = JSON.parse(localStorage.getItem(TESTIMONIAL_KEY) || "[]");
-  items.unshift({ name, comment });
-  localStorage.setItem(TESTIMONIAL_KEY, JSON.stringify(items.slice(0, 12)));
-  testimonialForm.reset();
-  renderTestimonials();
+  if (wasModerated) {
+    testimonialName.value = cleanName;
+    testimonialComment.value = cleanComment;
+    setTestimonialStatus("Your comment was cleaned to remove abusive words before posting.", "is-warning");
+  } else {
+    setTestimonialStatus("");
+  }
+
+  if (!db) {
+    const items = JSON.parse(localStorage.getItem(TESTIMONIAL_KEY) || "[]");
+    items.unshift({ name: cleanName, comment: cleanComment, createdAt: Date.now() });
+    localStorage.setItem(TESTIMONIAL_KEY, JSON.stringify(items.slice(0, TESTIMONIAL_LOCAL_MAX)));
+    testimonialForm.reset();
+    renderTestimonialsLocal();
+    setTestimonialStatus("Comment posted successfully.", "is-success");
+    return;
+  }
+
+  try {
+    const optimisticNow = Date.now();
+    allTestimonials = normalizeTestimonials([
+      {
+        id: `local-${optimisticNow}`,
+        name: cleanName,
+        comment: cleanComment,
+        createdAt: 0,
+        createdAtClient: optimisticNow
+      },
+      ...allTestimonials
+    ]);
+    visibleTestimonials = Math.max(TESTIMONIAL_PAGE_SIZE, visibleTestimonials);
+    renderTestimonials();
+
+    await addDoc(collection(db, TESTIMONIAL_COLLECTION), {
+      name: cleanName,
+      comment: cleanComment,
+      createdAt: serverTimestamp(),
+      createdAtClient: Date.now()
+    });
+    testimonialForm.reset();
+    setTestimonialStatus("Comment posted successfully.", "is-success");
+  } catch (error) {
+    console.warn("Could not post testimonial to Firestore. Using local storage.", error);
+    const items = JSON.parse(localStorage.getItem(TESTIMONIAL_KEY) || "[]");
+    items.unshift({ name: cleanName, comment: cleanComment, createdAt: Date.now() });
+    localStorage.setItem(TESTIMONIAL_KEY, JSON.stringify(items.slice(0, TESTIMONIAL_LOCAL_MAX)));
+    testimonialForm.reset();
+    renderTestimonialsLocal();
+    setTestimonialStatus("Comment posted successfully (offline mode).", "is-success");
+  }
 });
 
-renderTestimonials();
+startTestimonialsSync();
 </script>
 
-
-
+</body>
 </html>
+
 

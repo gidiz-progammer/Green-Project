@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://YOUR_DOMAIN_HERE/</loc></url>
+  <url><loc>https://YOUR_DOMAIN_HERE/index.html</loc></url>
+  <url><loc>https://YOUR_DOMAIN_HERE/homepage.html</loc></url>
+  <url><loc>https://YOUR_DOMAIN_HERE/productpage.html</loc></url>
+  <url><loc>https://YOUR_DOMAIN_HERE/cart.html</loc></url>
+  <url><loc>https://YOUR_DOMAIN_HERE/aboutpage.html</loc></url>
+  <url><loc>https://YOUR_DOMAIN_HERE/contactpage.html</loc></url>
+  <url><loc>https://YOUR_DOMAIN_HERE/faq.html</loc></url>
+  <url><loc>https://YOUR_DOMAIN_HERE/privacy-policy.html</loc></url>
+  <url><loc>https://YOUR_DOMAIN_HERE/terms-conditions.html</loc></url>
+  <url><loc>https://YOUR_DOMAIN_HERE/delivery-returns.html</loc></url>
+</urlset>

@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cart Page | Green World</title>
+  <style>
+    :root {
+      --brand: #0b7d69;
+      --brand-dark: #065a4b;
+      --bg: #eef7f4;
+      --line: #d7eae4;
+      --text: #0c3f35;
+      --muted: #3f7066;
+      --danger: #b42318;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 14%, rgba(190, 255, 231, 0.45), transparent 34%),
+        radial-gradient(circle at 88% 6%, rgba(255, 232, 173, 0.36), transparent 28%),
+        linear-gradient(160deg, #e8f9f4 0%, var(--bg) 46%, #f3fbf7 100%);
+    }
+
+    header {
+      background: linear-gradient(120deg, var(--brand-dark), var(--brand));
+      color: #fff;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      padding: 0.42rem 0.75rem;
+      border-radius: 8px;
+    }
+
+    nav a:hover,
+    nav a.active {
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    main {
+      max-width: 1150px;
+      margin: 0 auto;
+      padding: 1rem;
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1.45fr 0.85fr;
+    }
+
+    .panel {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1rem;
+      box-shadow: 0 10px 22px rgba(6, 90, 75, 0.1);
+    }
+
+    h1,
+    h2 {
+      margin-top: 0;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .cart-item {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 0.8rem;
+      margin-bottom: 0.7rem;
+      background: #fcfffd;
+    }
+
+    .item-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      align-items: flex-start;
+      margin-bottom: 0.35rem;
+    }
+
+    .item-name {
+      font-weight: 700;
+    }
+
+    .item-controls {
+      display: flex;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 0.5rem;
+    }
+
+    .item-controls button {
+      border: 1px solid #a7d1c6;
+      background: #f1fbf8;
+      color: #125d4f;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      width: 34px;
+      height: 34px;
+    }
+
+    .item-controls .remove {
+      width: auto;
+      padding: 0 0.65rem;
+      background: #fff4f4;
+      color: #8f1c14;
+      border-color: #e7bcbc;
+    }
+
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      margin: 0.45rem 0;
+    }
+
+    .total-line {
+      font-weight: 800;
+      font-size: 1.07rem;
+      color: var(--brand-dark);
+      border-top: 1px solid var(--line);
+      padding-top: 0.65rem;
+      margin-top: 0.6rem;
+    }
+
+    label {
+      display: block;
+      font-weight: 700;
+      margin: 0.7rem 0 0.32rem;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid #b8d8cf;
+      border-radius: 9px;
+      padding: 0.6rem 0.7rem;
+      font: inherit;
+      color: #1a5a4e;
+      background: #fff;
+    }
+
+    textarea {
+      min-height: 95px;
+      resize: vertical;
+    }
+
+    .actions {
+      display: grid;
+      gap: 0.55rem;
+      margin-top: 0.9rem;
+    }
+
+    .actions button,
+    .actions a {
+      border: none;
+      border-radius: 10px;
+      padding: 0.75rem 0.9rem;
+      font-weight: 700;
+      text-decoration: none;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .primary {
+      background: var(--brand);
+      color: #fff;
+    }
+
+    .primary:hover {
+      background: var(--brand-dark);
+    }
+
+    .danger {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    .secondary {
+      background: #ecf8f4;
+      border: 1px solid #b3d9ce;
+      color: #145f50;
+    }
+
+    .empty-box {
+      border: 1px dashed #9ecdbf;
+      border-radius: 12px;
+      padding: 1rem;
+      background: #f8fffd;
+      text-align: center;
+    }
+
+    footer {
+      text-align: center;
+      color: #e9fff8;
+      background: linear-gradient(120deg, #063f37, #0e6e61);
+      padding: 15px 10px 24px;
+      font-weight: 700;
+    }
+
+    footer a {
+      color: #b2dfdb;
+      text-decoration: none;
+      margin: 0 8px;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div><strong>GREEN WORLD CART PAGE</strong></div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="productpage.html">Products</a>
+      <a href="cart.html" class="active">Cart</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="panel">
+      <h1>Your Cart</h1>
+      <p class="muted">Review items, change quantity, and proceed to order.</p>
+      <div id="cartList"></div>
+    </section>
+
+    <aside class="panel">
+      <h2>Order Details</h2>
+      <div class="summary-line"><span>Total Items</span><strong id="sumItems">0</strong></div>
+      <div class="summary-line"><span>Subtotal</span><strong id="sumSubtotal">NGN 0</strong></div>
+      <div class="summary-line"><span>Delivery Fee</span><strong id="sumDelivery">NGN 0</strong></div>
+      <div class="summary-line total-line"><span>Total</span><strong id="sumTotal">NGN 0</strong></div>
+
+      <label for="customerName">Full Name</label>
+      <input id="customerName" type="text" placeholder="Your full name">
+
+      <label for="customerPhone">Phone Number</label>
+      <input id="customerPhone" type="tel" placeholder="+234...">
+
+      <label for="stateSearch">Find Your State</label>
+      <input id="stateSearch" type="text" placeholder="Type your state, e.g. Lagos, Kano, Rivers">
+
+      <label for="deliveryZone">Delivery State / Zone</label>
+      <select id="deliveryZone">
+        <option value="">Loading states...</option>
+      </select>
+
+      <label for="customerAddress">Delivery Address</label>
+      <textarea id="customerAddress" placeholder="House number, street, area, city"></textarea>
+
+      <label for="orderNote">Order Note (Optional)</label>
+      <textarea id="orderNote" placeholder="Any extra instruction"></textarea>
+
+      <div class="actions">
+        <button id="orderBtn" class="primary" type="button">Order on WhatsApp</button>
+        <button id="clearBtn" class="danger" type="button">Clear Cart</button>
+        <a class="secondary" href="productpage.html">Continue Shopping</a>
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    &copy; 2026 Oni Christianah Folashade | Green World Distributor<br>
+    <a href="privacy-policy.html">Privacy Policy</a>
+    <a href="terms-conditions.html">Terms</a>
+    <a href="delivery-returns.html">Delivery & Returns</a>
+    <a href="faq.html">FAQ</a>
+  </footer>
+
+  <script type="module">
+    import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBnpg1zVQr2-mEPwet80zNExFaPEjls4Hc",
+      authDomain: "green-world-project.firebaseapp.com",
+      projectId: "green-world-project",
+      storageBucket: "green-world-project.firebasestorage.app",
+      messagingSenderId: "1096759081626",
+      appId: "1:1096759081626:web:1f15a558d2bfcad1b7bd23"
+    };
+
+    const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const CART_STORAGE_KEY = "green_world_cart";
+    // Update this monthly with NBS PMS average (N/litre).
+    const CURRENT_PMS_PRICE = 1025;
+    const BASELINE_PMS_PRICE = 700;
+
+    function toNearest500(value) {
+      return Math.ceil(value / 500) * 500;
+    }
+
+    function calculateDeliveryFee(distanceKm, riskFactor = 1, overrideFee = null) {
+      if (overrideFee !== null) return overrideFee;
+      const fuelFactor = CURRENT_PMS_PRICE / BASELINE_PMS_PRICE;
+      const baseHandling = 900;
+      const perKm = 2.4;
+      const raw = (baseHandling + distanceKm * perKm) * fuelFactor * riskFactor;
+      return toNearest500(raw);
+    }
+
+    const DELIVERY_OPTIONS = [
+      { value: "ondo_ore_odigbo", label: "Ondo State - Ore (Odigbo LGA)", distanceKm: 20, riskFactor: 1.0, overrideFee: 1000 },
+      { value: "ondo_other", label: "Ondo State - Other Areas", distanceKm: 180, riskFactor: 1.0 },
+      { value: "ekiti", label: "Ekiti State", distanceKm: 220, riskFactor: 1.0 },
+      { value: "lagos", label: "Lagos State", distanceKm: 230, riskFactor: 1.0 },
+      { value: "ogun", label: "Ogun State", distanceKm: 280, riskFactor: 1.0 },
+      { value: "osun", label: "Osun State", distanceKm: 300, riskFactor: 1.0 },
+      { value: "oyo", label: "Oyo State", distanceKm: 320, riskFactor: 1.0 },
+      { value: "edo", label: "Edo State", distanceKm: 180, riskFactor: 1.02 },
+      { value: "delta", label: "Delta State", distanceKm: 260, riskFactor: 1.03 },
+      { value: "bayelsa", label: "Bayelsa State", distanceKm: 520, riskFactor: 1.05 },
+      { value: "rivers", label: "Rivers State", distanceKm: 430, riskFactor: 1.05 },
+      { value: "akwa_ibom", label: "Akwa Ibom State", distanceKm: 620, riskFactor: 1.06 },
+      { value: "cross_river", label: "Cross River State", distanceKm: 700, riskFactor: 1.06 },
+      { value: "abia", label: "Abia State", distanceKm: 520, riskFactor: 1.04 },
+      { value: "anambra", label: "Anambra State", distanceKm: 450, riskFactor: 1.04 },
+      { value: "ebonyi", label: "Ebonyi State", distanceKm: 560, riskFactor: 1.04 },
+      { value: "enugu", label: "Enugu State", distanceKm: 520, riskFactor: 1.04 },
+      { value: "imo", label: "Imo State", distanceKm: 500, riskFactor: 1.04 },
+      { value: "kogi", label: "Kogi State", distanceKm: 420, riskFactor: 1.04 },
+      { value: "kwara", label: "Kwara State", distanceKm: 460, riskFactor: 1.05 },
+      { value: "niger", label: "Niger State", distanceKm: 620, riskFactor: 1.07 },
+      { value: "fct", label: "FCT Abuja", distanceKm: 540, riskFactor: 1.06 },
+      { value: "nasarawa", label: "Nasarawa State", distanceKm: 620, riskFactor: 1.07 },
+      { value: "benue", label: "Benue State", distanceKm: 700, riskFactor: 1.08 },
+      { value: "plateau", label: "Plateau State", distanceKm: 820, riskFactor: 1.08 },
+      { value: "kaduna", label: "Kaduna State", distanceKm: 900, riskFactor: 1.09 },
+      { value: "kano", label: "Kano State", distanceKm: 1100, riskFactor: 1.1 },
+      { value: "katsina", label: "Katsina State", distanceKm: 1200, riskFactor: 1.12 },
+      { value: "jigawa", label: "Jigawa State", distanceKm: 1250, riskFactor: 1.12 },
+      { value: "sokoto", label: "Sokoto State", distanceKm: 1450, riskFactor: 1.13 },
+      { value: "zamfara", label: "Zamfara State", distanceKm: 1400, riskFactor: 1.13 },
+      { value: "kebbi", label: "Kebbi State", distanceKm: 1500, riskFactor: 1.13 },
+      { value: "bauchi", label: "Bauchi State", distanceKm: 1000, riskFactor: 1.1 },
+      { value: "gombe", label: "Gombe State", distanceKm: 1050, riskFactor: 1.1 },
+      { value: "taraba", label: "Taraba State", distanceKm: 1050, riskFactor: 1.11 },
+      { value: "adamawa", label: "Adamawa State", distanceKm: 1200, riskFactor: 1.12 },
+      { value: "yobe", label: "Yobe State", distanceKm: 1350, riskFactor: 1.12 },
+      { value: "borno", label: "Borno State", distanceKm: 1400, riskFactor: 1.14 }
+    ];
+    const DELIVERY_BY_VALUE = Object.fromEntries(
+      DELIVERY_OPTIONS.map((item) => [
+        item.value,
+        {
+          fee: calculateDeliveryFee(item.distanceKm, item.riskFactor, item.overrideFee ?? null),
+          label: item.label
+        }
+      ])
+    );
+
+    const cart = loadCartLocal();
+    let currentUser = null;
+    let syncTimer = null;
+    const cartList = document.getElementById("cartList");
+    const sumItems = document.getElementById("sumItems");
+    const sumSubtotal = document.getElementById("sumSubtotal");
+    const sumDelivery = document.getElementById("sumDelivery");
+    const sumTotal = document.getElementById("sumTotal");
+    const stateSearch = document.getElementById("stateSearch");
+    const deliveryZone = document.getElementById("deliveryZone");
+
+    function loadCartLocal() {
+      const raw = localStorage.getItem(CART_STORAGE_KEY);
+      if (!raw) return {};
+      try {
+        const parsed = JSON.parse(raw);
+        return parsed && typeof parsed === "object" ? parsed : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveCartLocal() {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+    }
+
+    async function loadCartRemote(uid) {
+      try {
+        const snap = await getDoc(doc(db, "carts", uid));
+        return snap.exists() ? (snap.data().items || {}) : {};
+      } catch (error) {
+        console.warn("Remote cart read failed.", error);
+        return {};
+      }
+    }
+
+    async function saveCartRemote() {
+      if (!currentUser) return;
+      try {
+        await setDoc(doc(db, "carts", currentUser.uid), {
+          items: cart,
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+      } catch (error) {
+        console.warn("Remote cart save failed.", error);
+      }
+    }
+
+    function scheduleRemoteSync() {
+      if (!currentUser) return;
+      if (syncTimer) clearTimeout(syncTimer);
+      syncTimer = setTimeout(() => {
+        saveCartRemote();
+      }, 700);
+    }
+
+    function formatNGN(amount) {
+      return "NGN " + amount.toLocaleString("en-NG");
+    }
+
+    function getItems() {
+      return Object.values(cart);
+    }
+
+    function getSubtotal(items) {
+      return items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
+    }
+
+    function renderCart() {
+      const items = getItems();
+      if (items.length === 0) {
+        cartList.innerHTML = `
+          <div class="empty-box">
+            <p>Your cart is empty.</p>
+            <a class="secondary" href="productpage.html">Go to Products</a>
+          </div>
+        `;
+      } else {
+        cartList.innerHTML = items.map((item) => {
+          const subtotal = item.unitPrice * item.quantity;
+          return `
+            <article class="cart-item">
+              <div class="item-top">
+                <div>
+                  <div class="item-name">${item.name}</div>
+                  <div class="muted">${item.details}</div>
+                </div>
+                <strong>${formatNGN(subtotal)}</strong>
+              </div>
+              <div class="muted">Unit Price: ${item.priceText}</div>
+              <div class="item-controls">
+                <button type="button" onclick="changeQty('${item.name.replace(/'/g, "\\'")}', -1)">-</button>
+                <strong>Qty: ${item.quantity}</strong>
+                <button type="button" onclick="changeQty('${item.name.replace(/'/g, "\\'")}', 1)">+</button>
+                <button type="button" class="remove" onclick="removeItem('${item.name.replace(/'/g, "\\'")}')">Remove</button>
+              </div>
+            </article>
+          `;
+        }).join("");
+      }
+
+      updateSummary();
+      saveCartLocal();
+      scheduleRemoteSync();
+    }
+
+    function updateSummary() {
+      const items = getItems();
+      const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+      const subtotal = getSubtotal(items);
+      const zone = DELIVERY_BY_VALUE[deliveryZone.value] || DELIVERY_BY_VALUE.ondo_ore_odigbo;
+      const total = subtotal + zone.fee;
+
+      sumItems.textContent = String(totalItems);
+      sumSubtotal.textContent = formatNGN(subtotal);
+      sumDelivery.textContent = formatNGN(zone.fee);
+      sumTotal.textContent = formatNGN(total);
+    }
+
+    function changeQty(name, diff) {
+      if (!cart[name]) return;
+      cart[name].quantity += diff;
+      if (cart[name].quantity <= 0) {
+        delete cart[name];
+      }
+      renderCart();
+    }
+
+    function removeItem(name) {
+      if (!cart[name]) return;
+      delete cart[name];
+      renderCart();
+    }
+
+    function clearCart() {
+      Object.keys(cart).forEach((key) => delete cart[key]);
+      renderCart();
+    }
+
+    function sendToWhatsApp() {
+      const items = getItems();
+      if (items.length === 0) {
+        alert("Your cart is empty.");
+        return;
+      }
+
+      const zone = DELIVERY_BY_VALUE[deliveryZone.value] || DELIVERY_BY_VALUE.ondo_ore_odigbo;
+      const name = document.getElementById("customerName").value.trim();
+      const phone = document.getElementById("customerPhone").value.trim();
+      const address = document.getElementById("customerAddress").value.trim();
+      const note = document.getElementById("orderNote").value.trim();
+      const subtotal = getSubtotal(items);
+      const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+      const total = subtotal + zone.fee;
+
+      const lines = items.map((item, index) => {
+        const subtotalItem = item.unitPrice * item.quantity;
+        return `${index + 1}. ${item.name} | Qty: ${item.quantity} | Unit: ${item.priceText} | Subtotal: ${formatNGN(subtotalItem)}`;
+      });
+
+      const message = [
+        "Hello MRS Oni, Green World Distributor.",
+        "",
+        "I want to place an order from Cart Page:",
+        ...lines,
+        "",
+        `Total Items: ${totalItems}`,
+        `Subtotal: ${formatNGN(subtotal)}`,
+        `Delivery Zone: ${zone.label}`,
+        `Delivery Fee: ${formatNGN(zone.fee)}`,
+        `Grand Total: ${formatNGN(total)}`,
+        "",
+        `Customer Name: ${name || "Not provided"}`,
+        `Phone: ${phone || "Not provided"}`,
+        `Address: ${address || "Not provided"}`,
+        `Note: ${note || "None"}`
+      ].join("\n");
+
+      window.open(`https://wa.me/2347067065524?text=${encodeURIComponent(message)}`, "_blank");
+    }
+
+    function renderDeliveryOptions(filterText = "") {
+      const prevValue = deliveryZone.value;
+      const term = filterText.trim().toLowerCase();
+      const filtered = DELIVERY_OPTIONS.filter((item) => item.label.toLowerCase().includes(term));
+
+      if (filtered.length === 0) {
+        deliveryZone.innerHTML = `<option value="">No state found</option>`;
+        return;
+      }
+
+      deliveryZone.innerHTML = filtered
+        .map((item) => `<option value="${item.value}">${item.label}</option>`)
+        .join("");
+
+      const stillExists = filtered.some((item) => item.value === prevValue);
+      if (stillExists) {
+        deliveryZone.value = prevValue;
+      }
+    }
+
+    document.getElementById("clearBtn").addEventListener("click", clearCart);
+    document.getElementById("orderBtn").addEventListener("click", sendToWhatsApp);
+    deliveryZone.addEventListener("change", updateSummary);
+    stateSearch.addEventListener("input", () => {
+      renderDeliveryOptions(stateSearch.value);
+      updateSummary();
+    });
+
+    renderDeliveryOptions();
+    renderCart();
+    onAuthStateChanged(auth, async (user) => {
+      currentUser = user;
+      if (!user) return;
+      const remote = await loadCartRemote(user.uid);
+      const localHas = Object.keys(cart).length > 0;
+      const remoteHas = Object.keys(remote).length > 0;
+
+      if (!localHas && remoteHas) {
+        Object.keys(remote).forEach((key) => {
+          cart[key] = remote[key];
+        });
+        renderCart();
+      } else if (localHas) {
+        saveCartRemote();
+      }
+    });
+    window.changeQty = changeQty;
+    window.removeItem = removeItem;
+  </script>
+</body>
+</html>

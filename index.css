@@ -566,6 +566,42 @@ footer { background:#16a085; color:white; text-align:center; padding:25px; font-
   gap: 0.6rem;
 }
 
+.testimonial-status {
+  margin: 0.65rem 0 0;
+  min-height: 1.2rem;
+  font-weight: 700;
+  color: #2a6258;
+}
+
+.testimonial-status.is-warning {
+  color: #9a3412;
+}
+
+.testimonial-status.is-success {
+  color: #0f6f5d;
+}
+
+.testimonial-list-meta {
+  margin-top: 0.7rem;
+  color: #2e665c;
+  font-weight: 600;
+}
+
+.testimonial-toggle-btn {
+  margin-top: 0.6rem;
+  border: 1px solid #9ecfc2;
+  background: #ffffff;
+  color: #0f6f5d;
+  border-radius: 10px;
+  padding: 9px 12px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.testimonial-toggle-btn:hover {
+  background: #ecf8f4;
+}
+
 .user-testimonial {
   background: #ffffff;
   border: 1px solid #d3e9e2;
@@ -584,6 +620,21 @@ footer { background:#16a085; color:white; text-align:center; padding:25px; font-
   color: #0e6d5b;
   font-weight: 700;
   font-style: normal;
+}
+
+.testimonial-delete-btn {
+  margin-top: 0.55rem;
+  border: 1px solid #efb6b6;
+  background: #fff5f5;
+  color: #9b1c1c;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.testimonial-delete-btn:hover {
+  background: #ffe8e8;
 }
 
 .faq-grid details summary {
