@@ -67,6 +67,43 @@
       border-radius: 8px;
       font: inherit;
     }
+    .password-wrap {
+      position: relative;
+    }
+    .password-wrap input {
+      padding-right: 2.6rem;
+    }
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 8px;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      color: #5c7f76;
+      width: auto;
+      min-height: 0;
+      padding: 2px 4px;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .toggle-password svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.9;
+    }
+    .toggle-password.is-closed::after {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 9px;
+      width: 11px;
+      height: 1.6px;
+      background: currentColor;
+      transform: rotate(-45deg);
+    }
     .actions {
       margin-top: 0.8rem;
       display: flex;
@@ -120,7 +157,15 @@
       <label for="newEmail">New Email</label>
       <input id="newEmail" type="email" placeholder="newemail@example.com">
       <label for="emailPassword">Current Password</label>
-      <input id="emailPassword" type="password" placeholder="Current password">
+      <div class="password-wrap">
+        <input id="emailPassword" type="password" placeholder="Current password">
+        <button type="button" class="toggle-password is-closed" data-target="emailPassword" aria-label="Show password">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6Z"></path>
+            <circle cx="12" cy="12" r="3.2"></circle>
+          </svg>
+        </button>
+      </div>
       <div class="actions">
         <button id="changeEmailBtn" class="primary" type="button">Update Email</button>
       </div>
@@ -130,11 +175,35 @@
     <section class="card">
       <h2>Change Password</h2>
       <label for="currentPassword">Current Password</label>
-      <input id="currentPassword" type="password" placeholder="Current password">
+      <div class="password-wrap">
+        <input id="currentPassword" type="password" placeholder="Current password">
+        <button type="button" class="toggle-password is-closed" data-target="currentPassword" aria-label="Show password">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6Z"></path>
+            <circle cx="12" cy="12" r="3.2"></circle>
+          </svg>
+        </button>
+      </div>
       <label for="newPassword">New Password</label>
-      <input id="newPassword" type="password" placeholder="New password">
+      <div class="password-wrap">
+        <input id="newPassword" type="password" placeholder="New password">
+        <button type="button" class="toggle-password is-closed" data-target="newPassword" aria-label="Show password">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6Z"></path>
+            <circle cx="12" cy="12" r="3.2"></circle>
+          </svg>
+        </button>
+      </div>
       <label for="confirmNewPassword">Confirm New Password</label>
-      <input id="confirmNewPassword" type="password" placeholder="Confirm new password">
+      <div class="password-wrap">
+        <input id="confirmNewPassword" type="password" placeholder="Confirm new password">
+        <button type="button" class="toggle-password is-closed" data-target="confirmNewPassword" aria-label="Show password">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6Z"></path>
+            <circle cx="12" cy="12" r="3.2"></circle>
+          </svg>
+        </button>
+      </div>
       <div class="actions">
         <button id="changePasswordBtn" class="primary" type="button">Update Password</button>
       </div>
@@ -145,7 +214,15 @@
       <h2>Delete Account</h2>
       <p class="muted">This action is permanent. Your login account will be removed.</p>
       <label for="deletePassword">Current Password</label>
-      <input id="deletePassword" type="password" placeholder="Current password">
+      <div class="password-wrap">
+        <input id="deletePassword" type="password" placeholder="Current password">
+        <button type="button" class="toggle-password is-closed" data-target="deletePassword" aria-label="Show password">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6Z"></path>
+            <circle cx="12" cy="12" r="3.2"></circle>
+          </svg>
+        </button>
+      </div>
       <div class="actions">
         <button id="deleteAccountBtn" class="danger" type="button">Delete My Account</button>
       </div>
@@ -203,6 +280,18 @@
     function getCredential(password) {
       return EmailAuthProvider.credential(currentUser.email, password);
     }
+
+    document.querySelectorAll(".toggle-password").forEach((button) => {
+      button.addEventListener("click", () => {
+        const targetId = button.dataset.target;
+        const input = document.getElementById(targetId);
+        if (!input) return;
+        const isHidden = input.type === "password";
+        input.type = isHidden ? "text" : "password";
+        button.classList.toggle("is-closed", !isHidden);
+        button.setAttribute("aria-label", isHidden ? "Hide password" : "Show password");
+      });
+    });
 
     onAuthStateChanged(auth, (user) => {
       if (!user) {
