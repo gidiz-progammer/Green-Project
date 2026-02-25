@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Home - Oni Christianah Folashade</title>
+  <title>Green World Ore | Mrs Oni</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -51,7 +51,6 @@
       font-weight: 700;
     }
 
-    /* Distributor Label */
     .distributor-label {
       font-weight: 700;
       font-size: 1.3rem;
@@ -70,15 +69,10 @@
       font-size: 1.4rem;
     }
     @keyframes glowPulse {
-      0% {
-        box-shadow: 0 0 5px #81c784;
-      }
-      100% {
-        box-shadow: 0 0 18px #388e3c;
-      }
+      0% { box-shadow: 0 0 5px #81c784; }
+      100% { box-shadow: 0 0 18px #388e3c; }
     }
 
-    /* Animated border around the name */
     .name-container {
       border: 3px solid transparent;
       padding: 1.2rem 3rem;
@@ -97,7 +91,10 @@
     .name-container::before {
       content: "";
       position: absolute;
-      top: -5px; left: -5px; right: -5px; bottom: -5px;
+      top: -5px;
+      left: -5px;
+      right: -5px;
+      bottom: -5px;
       border: 3px solid #004d40;
       border-radius: 20px;
       opacity: 0.7;
@@ -126,11 +123,10 @@
       }
     }
     @keyframes fadeIn {
-      0% {opacity: 0; transform: translateY(-15px);}
-      100% {opacity: 1; transform: translateY(0);}
+      0% { opacity: 0; transform: translateY(-15px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
 
-    /* Tagline */
     .tagline {
       margin-top: 0.5rem;
       font-weight: 600;
@@ -139,6 +135,17 @@
       font-style: italic;
       user-select: none;
       opacity: 0.85;
+    }
+    .hero-photo {
+      margin-top: 1rem;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #d9f2ec;
+      box-shadow: 0 10px 24px rgba(0, 77, 64, 0.25);
+      background: #e8f7f3;
+      cursor: zoom-in;
     }
 
     main {
@@ -151,7 +158,7 @@
       background: white;
       padding: 2rem 2rem;
       border-radius: 15px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
       color: #004d40;
     }
     h2 {
@@ -165,7 +172,52 @@
       margin-top: 0.6rem;
     }
 
-    /* Featured Products preview */
+    .cta-row {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+    .cta-row a {
+      text-decoration: none;
+      font-weight: 700;
+      border-radius: 10px;
+      padding: 0.7rem 1rem;
+      display: inline-block;
+    }
+    .cta-primary {
+      background: #00796b;
+      color: #fff;
+    }
+    .cta-secondary {
+      border: 1px solid #7ab8ac;
+      color: #0b4f44;
+      background: #ecf7f4;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.8rem;
+    }
+    .stat-card {
+      background: #f3fbf8;
+      border: 1px solid #cce7df;
+      border-radius: 12px;
+      padding: 0.8rem;
+      text-align: center;
+    }
+    .stat-card strong {
+      display: block;
+      font-size: 1.2rem;
+      color: #00695c;
+    }
+    .stat-card span {
+      font-size: 0.92rem;
+      color: #2f6f63;
+      font-weight: 600;
+    }
+
     .featured-products {
       display: flex;
       gap: 1.5rem;
@@ -195,7 +247,76 @@
       color: #00695c;
     }
 
-    /* Testimonials teaser */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.8rem;
+    }
+    .step {
+      border: 1px solid #c9e5dd;
+      border-radius: 12px;
+      background: #f7fffc;
+      padding: 0.9rem;
+    }
+    .step strong {
+      display: inline-block;
+      margin-bottom: 0.4rem;
+      color: #00695c;
+    }
+
+    .owner-box {
+      border: 1px solid #cae8df;
+      border-radius: 12px;
+      background: #f7fffc;
+      padding: 1rem;
+    }
+    .owner-layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
+    .owner-photo {
+      width: 100%;
+      max-width: 220px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 1px solid #bfe2d8;
+      box-shadow: 0 8px 18px rgba(0, 77, 64, 0.15);
+      background: #ebf7f3;
+      cursor: zoom-in;
+    }
+    .image-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 1rem;
+    }
+    .image-modal.is-open {
+      display: flex;
+    }
+    .image-modal img {
+      max-width: min(94vw, 980px);
+      max-height: 90vh;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+    .image-modal-close {
+      position: absolute;
+      top: 16px;
+      right: 18px;
+      color: #fff;
+      background: transparent;
+      border: none;
+      font-size: 2rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+
     .testimonial {
       font-style: italic;
       border-left: 4px solid #009688;
@@ -242,6 +363,19 @@
       .product-card {
         flex: 1 1 100%;
       }
+
+      .stats-grid,
+      .steps-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .owner-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .owner-photo {
+        max-width: 260px;
+      }
     }
 
     @media (max-width: 420px) {
@@ -252,20 +386,37 @@
       .tagline {
         font-size: 0.9rem;
       }
+
+      .stats-grid,
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-photo {
+        width: 130px;
+        height: 130px;
+      }
     }
   </style>
 </head>
 <body>
   <header>
     <div class="distributor-label">
-      <span class="leaf-icon">🍃</span> Green World Distributor
+      <span class="leaf-icon">*</span> Green World Ore Branch
     </div>
     <div class="name-container">
-      Oni Christianah Folashade
+      Mrs Oni
     </div>
     <div class="tagline">
-      Official Shop Owner - Ore, Ondo
+      Branch Manager - Star 8 to Star 1 Leadership Track
     </div>
+    <img
+      class="hero-photo"
+      src="mrs-oni.jpg"
+      alt="Mrs Oni, Branch Manager of Green World Ore"
+      data-preview-src="mrs-oni.jpg"
+      onerror="this.style.display='none';"
+    >
     <nav>
       <a href="index.html">Home</a>
       <a href="productpage.html">Products</a>
@@ -277,48 +428,172 @@
 
   <main>
     <section>
-      <h2>Welcome</h2>
+      <h2>Natural Wellness. Real Results.</h2>
       <p>
-        Welcome to the official website of Oni Christianah Folashade, your trusted Green World Distributor and Shop Owner in Ore, Ondo. Explore our range of natural and herbal products designed to promote your health and well-being.
+        Welcome to Green World Ore, led by Mrs Oni. We provide authentic Green World wellness products, practical guidance, and fast WhatsApp support for customers in Ore, Ondo, and across Nigeria.
       </p>
+      <div class="cta-row">
+        <a class="cta-primary" href="productpage.html">Shop Products</a>
+        <a class="cta-secondary" href="https://wa.me/2347067065524" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a>
+      </div>
     </section>
 
     <section>
-      <h2>Featured Products</h2>
+      <h2>Why Customers Trust Green World Ore</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <strong>500+</strong>
+          <span>Customers Served</span>
+        </div>
+        <div class="stat-card">
+          <strong>6+ Years</strong>
+          <span>Wellness Support Experience</span>
+        </div>
+        <div class="stat-card">
+          <strong>Fast Reply</strong>
+          <span>WhatsApp Response Support</span>
+        </div>
+        <div class="stat-card">
+          <strong>Nationwide</strong>
+          <span>Delivery Across Nigeria</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Top Best-Selling Products</h2>
       <div class="featured-products">
         <div class="product-card" onclick="window.location.href='productpage.html'">
-          <h3>Green Tea</h3>
-          <p>Boost your metabolism and immunity naturally.</p>
+          <h3>Balsam Pear Tablet</h3>
+          <p>Popular support option for blood sugar balance routines.</p>
         </div>
         <div class="product-card" onclick="window.location.href='productpage.html'">
-          <h3>Herbal Supplements</h3>
-          <p>Support your wellness every day with natural ingredients.</p>
+          <h3>Glucoblock</h3>
+          <p>Frequently paired with lifestyle changes for glucose control.</p>
         </div>
         <div class="product-card" onclick="window.location.href='productpage.html'">
-          <h3>Detox Capsules</h3>
-          <p>Cleanse your body naturally and feel refreshed.</p>
+          <h3>Pro Slimming Tea</h3>
+          <p>Trusted by customers focused on weight management goals.</p>
+        </div>
+        <div class="product-card" onclick="window.location.href='productpage.html'">
+          <h3>Intestine Cleansing Tea</h3>
+          <p>Supports digestion and internal cleansing routines.</p>
+        </div>
+        <div class="product-card" onclick="window.location.href='productpage.html'">
+          <h3>Greenworld Zinc Tablet</h3>
+          <p>Daily nutrition support product for immunity and energy.</p>
         </div>
       </div>
     </section>
 
     <section>
-      <h2>What Our Customers Say</h2>
+      <h2>How Ordering Works</h2>
+      <div class="steps-grid">
+        <div class="step">
+          <strong>Step 1: Choose Products</strong>
+          <p>Browse products and select the items that match your health goal and budget.</p>
+        </div>
+        <div class="step">
+          <strong>Step 2: Confirm on WhatsApp</strong>
+          <p>Send your list directly to Mrs Oni for quick confirmation and guidance.</p>
+        </div>
+        <div class="step">
+          <strong>Step 3: Receive Delivery</strong>
+          <p>Ore same day/next morning, Ondo 1-2 days, and nationwide delivery in 3-5 days.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Meet the Branch Manager</h2>
+      <div class="owner-box">
+        <div class="owner-layout">
+          <img
+            class="owner-photo"
+            src="mrs-oni.jpg"
+            alt="Mrs Oni at Green World Ore"
+            data-preview-src="mrs-oni.jpg"
+            onerror="this.style.display='none';"
+          >
+          <div>
+            <p>
+              Mrs Oni is the Branch Manager of Green World Ore and is on the company's Star 8 to Star 1 leadership path. In her role, she provides trusted product guidance, leads customer support, and ensures each client gets attentive follow-up from first inquiry to delivery.
+            </p>
+            <p>
+              She is widely known for her accommodating and loving personality. Customers appreciate how warmly she receives people, listens with patience, and treats each person with respect and genuine care.
+            </p>
+            <p>
+              Her lifestyle reflects discipline, service, and compassion. She combines professional standards with a human touch, making Green World Ore a place where customers feel supported and understood.
+            </p>
+            <p><strong>Contact:</strong> +234 706 706 5524 | onifolashade@gmail.com</p>
+            <p><strong>Location:</strong> Ore, Odigbo LGA, Ondo State, Nigeria</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Customer Feedback</h2>
       <div class="testimonial">
-        "Amazing products and fast delivery! My health has improved so much."
-        <div class="testimonial-author">- Adeola M.</div>
+        "I got my order quickly and the support was very clear. I now order directly through WhatsApp."
+        <div class="testimonial-author">- Adeola M., Ondo</div>
       </div>
       <div class="testimonial">
-        "I trust Oni Christianah Folashade for all my herbal needs. Highly recommend!"
-        <div class="testimonial-author">- Kunle A.</div>
+        "Green World Ore helped me choose the right products for my goal. Service is always respectful."
+        <div class="testimonial-author">- Kunle A., Akure</div>
+      </div>
+      <div class="cta-row">
+        <a class="cta-primary" href="https://wa.me/2347067065524" target="_blank" rel="noopener noreferrer">Order Now</a>
+        <a class="cta-secondary" href="https://www.tiktok.com/@_folashade321" target="_blank" rel="noopener noreferrer">Follow on TikTok: @_folashade321</a>
       </div>
     </section>
   </main>
 
   <footer style="text-align:center; padding:16px 10px 24px; color:#e9fff8; background:linear-gradient(120deg,#063f37,#0e6e61); font-weight:700;">
-    &copy; 2026 Oni Christianah Folashade | Green World Distributor<br>
+    &copy; 2026 Mrs Oni | Green World Ore Branch<br>
     <a href="privacy-policy.html" style="color:#b2dfdb; text-decoration:none; margin:0 8px;">Privacy Policy</a>
     <a href="delivery-returns.html" style="color:#b2dfdb; text-decoration:none; margin:0 8px;">Delivery & Returns</a>
     <a href="faq.html" style="color:#b2dfdb; text-decoration:none; margin:0 8px;">FAQ</a>
   </footer>
+  <div id="imageModal" class="image-modal" aria-hidden="true">
+    <button type="button" class="image-modal-close" id="imageModalClose" aria-label="Close image preview">&times;</button>
+    <img id="imageModalImg" src="" alt="Full view of Mrs Oni">
+  </div>
+  <script>
+    (function () {
+      const modal = document.getElementById("imageModal");
+      const modalImg = document.getElementById("imageModalImg");
+      const closeBtn = document.getElementById("imageModalClose");
+      const clickableImages = document.querySelectorAll("[data-preview-src]");
+      if (!modal || !modalImg || !closeBtn || clickableImages.length === 0) return;
+
+      function openModal(src, alt) {
+        modalImg.src = src;
+        modalImg.alt = alt || "Full image preview";
+        modal.classList.add("is-open");
+        modal.setAttribute("aria-hidden", "false");
+      }
+
+      function closeModal() {
+        modal.classList.remove("is-open");
+        modal.setAttribute("aria-hidden", "true");
+        modalImg.src = "";
+      }
+
+      clickableImages.forEach((img) => {
+        img.addEventListener("click", () => {
+          openModal(img.getAttribute("data-preview-src"), img.alt);
+        });
+      });
+
+      closeBtn.addEventListener("click", closeModal);
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) closeModal();
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeModal();
+      });
+    })();
+  </script>
 </body>
 </html>

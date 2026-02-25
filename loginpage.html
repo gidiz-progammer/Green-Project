@@ -28,6 +28,18 @@
       </button>
     </div>
 
+    <label class="small" style="display:flex; align-items:center; gap:8px; margin:10px 0 6px;">
+      <input id="rememberMe" type="checkbox" style="width:auto; margin:0;">
+      Remember me on this device
+    </label>
+
+    <button id="forgotPasswordBtn" type="button" style="margin-bottom:10px; background:#f5f5f5; color:#1b5e20; border:1px solid #d8e7dc;">
+      Forgot Password?
+    </button>
+    <button id="resendVerifyBtn" type="button" hidden style="margin-bottom:10px; background:#fff7ed; color:#7c2d12; border:1px solid #fed7aa;">
+      Resend Verification Email
+    </button>
+
     <!-- Login button -->
     <button id="loginBtn">Login</button>
 
@@ -45,6 +57,7 @@
   <script type="module">
 import * as FirebaseApp from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import * as FirebaseAuth from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app-check.js";
 console.log("LOGIN_AUTH_SCRIPT_VERSION_2026_02_23_01");
 
 // Firebase config (replace with your project info)
@@ -61,12 +74,50 @@ const app = FirebaseApp.getApps().length
   ? FirebaseApp.getApp()
   : FirebaseApp.initializeApp(firebaseConfig);
 const auth = FirebaseAuth.getAuth(app);
+const APP_CHECK_SITE_KEY = window.__APP_CHECK_SITE_KEY__ || "";
+if (APP_CHECK_SITE_KEY) {
+  initializeAppCheck(app, {
+    provider: new ReCaptchaV3Provider(APP_CHECK_SITE_KEY),
+    isTokenAutoRefreshEnabled: true
+  });
+}
 
 const loginBtn = document.getElementById("loginBtn");
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
 const togglePasswordBtn = document.getElementById("togglePassword");
+const rememberMeInput = document.getElementById("rememberMe");
+const forgotPasswordBtn = document.getElementById("forgotPasswordBtn");
+const resendVerifyBtn = document.getElementById("resendVerifyBtn");
 const loginMsg = document.getElementById("loginMsg");
+let resendCooldown = 0;
+let resendTimer = null;
+
+function startResendCooldown(seconds = 60) {
+  resendCooldown = Date.now() + seconds * 1000;
+  resendVerifyBtn.disabled = true;
+  resendVerifyBtn.hidden = false;
+  const tick = () => {
+    const leftMs = resendCooldown - Date.now();
+    if (leftMs <= 0) {
+      resendVerifyBtn.disabled = false;
+      resendVerifyBtn.textContent = "Resend Verification Email";
+      resendTimer = null;
+      return;
+    }
+    const left = Math.ceil(leftMs / 1000);
+    resendVerifyBtn.textContent = `Resend Verification (${left}s)`;
+    resendTimer = setTimeout(tick, 1000);
+  };
+  if (resendTimer) clearTimeout(resendTimer);
+  tick();
+}
+
+FirebaseAuth.onAuthStateChanged(auth, (user) => {
+  if (user && user.emailVerified) {
+    window.location.href = "index.html";
+  }
+});
 
 loginBtn.addEventListener("click", async () => {
   loginMsg.textContent = "";
@@ -79,15 +130,21 @@ loginBtn.addEventListener("click", async () => {
   }
 
   try {
+    await FirebaseAuth.setPersistence(
+      auth,
+      rememberMeInput.checked
+        ? FirebaseAuth.browserLocalPersistence
+        : FirebaseAuth.browserSessionPersistence
+    );
+
     // 1) Sign in
     const userCred = await FirebaseAuth.signInWithEmailAndPassword(auth, email, password);
 
     // 2) Check if email is verified
     if (!userCred.user.emailVerified) {
-      // Block login
-      await FirebaseAuth.sendEmailVerification(userCred.user);
       await FirebaseAuth.signOut(auth); // immediately sign out
-      loginMsg.textContent = "Please verify your email before logging in. A new verification email was sent.";
+      loginMsg.textContent = "Please verify your email before logging in.";
+      resendVerifyBtn.hidden = false;
       return;
     }
 
@@ -105,6 +162,62 @@ loginBtn.addEventListener("click", async () => {
     };
     loginMsg.textContent = friendlyErrors[err.code] || err.message || "Login failed.";
     console.error("Login error:", err);
+  }
+});
+
+resendVerifyBtn.addEventListener("click", async () => {
+  loginMsg.textContent = "";
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
+  if (!email || !password) {
+    loginMsg.textContent = "Enter your email and password first.";
+    return;
+  }
+  if (Date.now() < resendCooldown) return;
+
+  try {
+    await FirebaseAuth.setPersistence(auth, FirebaseAuth.browserSessionPersistence);
+    const userCred = await FirebaseAuth.signInWithEmailAndPassword(auth, email, password);
+    if (userCred.user.emailVerified) {
+      window.location.href = "index.html";
+      return;
+    }
+    await FirebaseAuth.sendEmailVerification(userCred.user);
+    await FirebaseAuth.signOut(auth);
+    loginMsg.textContent = "Verification email sent again. Check your inbox.";
+    startResendCooldown(60);
+  } catch (err) {
+    const friendlyErrors = {
+      "auth/invalid-email": "Invalid email format.",
+      "auth/invalid-credential": "Incorrect email or password.",
+      "auth/user-not-found": "No account found for this email.",
+      "auth/wrong-password": "Incorrect email or password.",
+      "auth/network-request-failed": "Network error. Check your internet connection."
+    };
+    loginMsg.textContent = friendlyErrors[err.code] || err.message || "Could not resend verification email.";
+    console.error("Resend verification error:", err);
+  }
+});
+
+forgotPasswordBtn.addEventListener("click", async () => {
+  loginMsg.textContent = "";
+  const email = emailInput.value.trim();
+  if (!email) {
+    loginMsg.textContent = "Enter your email first, then click Forgot Password.";
+    return;
+  }
+
+  try {
+    await FirebaseAuth.sendPasswordResetEmail(auth, email);
+    loginMsg.textContent = "Password reset email sent. Check your inbox.";
+  } catch (err) {
+    const friendlyErrors = {
+      "auth/invalid-email": "Invalid email format.",
+      "auth/user-not-found": "No account found for this email.",
+      "auth/network-request-failed": "Network error. Check your internet connection."
+    };
+    loginMsg.textContent = friendlyErrors[err.code] || err.message || "Could not send reset email.";
+    console.error("Password reset error:", err);
   }
 });
 

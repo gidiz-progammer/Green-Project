@@ -189,6 +189,26 @@ button:hover {
   font-weight: bold;
 }
 
+.success.is-error {
+  color: #b00020;
+}
+
+.password-rules {
+  text-align: left;
+  margin: 8px 0 14px;
+  padding-left: 18px;
+  color: #777;
+  font-size: 13px;
+}
+
+.password-rules li {
+  margin-bottom: 4px;
+}
+
+.password-rules li.valid {
+  color: #1b5e20;
+}
+
 @media (max-width: 768px) {
   .register-container {
     padding: 28px 18px;
@@ -264,6 +284,13 @@ button:hover {
         </svg>
       </button>
     </div>
+    <input type="password" id="confirmPassword" placeholder="Confirm Password">
+    <ul id="passwordRules" class="password-rules">
+      <li id="ruleLength">At least 8 characters</li>
+      <li id="ruleUpper">At least 1 uppercase letter</li>
+      <li id="ruleNumber">At least 1 number</li>
+      <li id="ruleSymbol">At least 1 symbol</li>
+    </ul>
 
     <button id="registerBtn">Create Account</button>
 
@@ -278,6 +305,7 @@ button:hover {
 <script type="module">
 import * as FirebaseApp from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import * as FirebaseAuth from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app-check.js";
 console.log("REGISTER_AUTH_SCRIPT_VERSION_2026_02_23_01");
 
 // Firebase config
@@ -294,19 +322,71 @@ const app = FirebaseApp.getApps().length
   ? FirebaseApp.getApp()
   : FirebaseApp.initializeApp(firebaseConfig);
 const auth = FirebaseAuth.getAuth(app);
+const APP_CHECK_SITE_KEY = window.__APP_CHECK_SITE_KEY__ || "";
+if (APP_CHECK_SITE_KEY) {
+  initializeAppCheck(app, {
+    provider: new ReCaptchaV3Provider(APP_CHECK_SITE_KEY),
+    isTokenAutoRefreshEnabled: true
+  });
+}
 
 const btn = document.getElementById("registerBtn");
 const msg = document.getElementById("successMsg");
 const passwordInput = document.getElementById("password");
+const confirmPasswordInput = document.getElementById("confirmPassword");
 const togglePasswordBtn = document.getElementById("togglePassword");
+const ruleLength = document.getElementById("ruleLength");
+const ruleUpper = document.getElementById("ruleUpper");
+const ruleNumber = document.getElementById("ruleNumber");
+const ruleSymbol = document.getElementById("ruleSymbol");
+
+FirebaseAuth.onAuthStateChanged(auth, (user) => {
+  if (user && user.emailVerified) {
+    window.location.href = "index.html";
+  }
+});
+
+function setMessage(text, isError = false) {
+  msg.textContent = text;
+  msg.classList.toggle("is-error", isError);
+}
+
+function validatePassword(password) {
+  return {
+    lengthOk: password.length >= 8,
+    upperOk: /[A-Z]/.test(password),
+    numberOk: /[0-9]/.test(password),
+    symbolOk: /[^A-Za-z0-9]/.test(password)
+  };
+}
+
+function updatePasswordRuleUI(password) {
+  const result = validatePassword(password);
+  ruleLength.classList.toggle("valid", result.lengthOk);
+  ruleUpper.classList.toggle("valid", result.upperOk);
+  ruleNumber.classList.toggle("valid", result.numberOk);
+  ruleSymbol.classList.toggle("valid", result.symbolOk);
+  return result.lengthOk && result.upperOk && result.numberOk && result.symbolOk;
+}
 
 btn.addEventListener("click", async () => {
-  msg.textContent = "";
+  setMessage("");
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
+  const confirmPassword = confirmPasswordInput.value;
 
   if (!email || !password) {
-    msg.textContent = "Please enter email and password.";
+    setMessage("Please enter email and password.", true);
+    return;
+  }
+
+  if (!updatePasswordRuleUI(password)) {
+    setMessage("Password does not meet the requirements.", true);
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    setMessage("Passwords do not match.", true);
     return;
   }
 
@@ -321,7 +401,7 @@ btn.addEventListener("click", async () => {
     await FirebaseAuth.signOut(auth);
 
     // 4) Show message
-    msg.textContent = "Account created. Verification email sent. Check your inbox.";
+    setMessage("Account created. Verification email sent. Check your inbox.");
 
     setTimeout(() => {
       window.location.href = "loginpage.html";
@@ -334,9 +414,21 @@ btn.addEventListener("click", async () => {
       "auth/weak-password": "Password must be at least 6 characters.",
       "auth/network-request-failed": "Network error. Check your internet connection."
     };
-    msg.textContent = friendlyErrors[err.code] || err.message || "Account creation failed.";
+    setMessage(friendlyErrors[err.code] || err.message || "Account creation failed.", true);
     console.error("Create account error:", err);
   }
+});
+
+passwordInput.addEventListener("input", () => {
+  updatePasswordRuleUI(passwordInput.value);
+});
+
+[document.getElementById("email"), passwordInput, confirmPasswordInput].forEach((input) => {
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      btn.click();
+    }
+  });
 });
 
 togglePasswordBtn.addEventListener("click", () => {

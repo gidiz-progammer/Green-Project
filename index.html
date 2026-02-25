@@ -33,8 +33,8 @@
     <a href="./contactpage.html" style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; transition:color 0.3s ease;">Contact</a>
     <a href="./faq.html" style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; transition:color 0.3s ease;">FAQ</a>
     <a href="./admin.html" style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; transition:color 0.3s ease;">Admin</a>
-        <a href="./loginpage.html" style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; transition:color 0.3s ease;">Sign up</a>
-       <a href="./loginpage.html" style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; transition:color 0.3s ease;">Logout</a>
+    <a href="./account-settings.html" style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; transition:color 0.3s ease;">Account</a>
+    <a href="#" onclick="logout(); return false;" style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; transition:color 0.3s ease;">Logout</a>
         <!-- <button style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; font-size: 18px; transition:color 0.3s ease;border: thin solid #00796b; background-color: #00796b;" onclick="logout()"><a href="">Logout</a></button> -->
   </nav>
   
@@ -390,10 +390,12 @@
 import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from
 "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app-check.js";
 import {
   getFirestore,
   collection,
   doc,
+  getDoc,
   addDoc,
   deleteDoc,
   query,
@@ -415,21 +417,43 @@ const firebaseConfig = {
 let app;
 let auth;
 let db;
+let currentUser = null;
+let isCurrentUserAdmin = false;
 
 try {
   app = getApps().length ? getApp() : initializeApp(firebaseConfig);
   auth = getAuth(app);
   db = getFirestore(app);
+  const APP_CHECK_SITE_KEY = window.__APP_CHECK_SITE_KEY__ || "";
+  if (APP_CHECK_SITE_KEY) {
+    initializeAppCheck(app, {
+      provider: new ReCaptchaV3Provider(APP_CHECK_SITE_KEY),
+      isTokenAutoRefreshEnabled: true
+    });
+  }
 } catch (error) {
   console.error("Firebase init failed.", error);
   document.body.style.display = "block";
 }
 
 if (auth) {
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     if (!user) {
       window.location.replace("loginpage.html");
     } else {
+      if (!user.emailVerified) {
+        await signOut(auth);
+        window.location.replace("loginpage.html");
+        return;
+      }
+      currentUser = user;
+      try {
+        const adminSnap = await getDoc(doc(db, "admins", user.uid));
+        isCurrentUserAdmin = adminSnap.exists() && adminSnap.data()?.active === true;
+      } catch {
+        isCurrentUserAdmin = false;
+      }
+      renderTestimonials();
       document.body.style.display = "block";
     }
   });
@@ -574,6 +598,7 @@ function normalizeTestimonials(items) {
         id: item?.id || "",
         name: String(item?.name || "Anonymous").trim(),
         comment: String(item?.comment || "").trim(),
+        authorUid: String(item?.authorUid || "").trim(),
         createdAt,
         createdAtClient,
         sortAt: Math.max(createdAt, createdAtClient)
@@ -605,18 +630,26 @@ function renderTestimonials() {
   const visibleItems = allTestimonials.slice(0, count);
 
   testimonialList.innerHTML = visibleItems
-    .map((item, index) => `
+    .map((item, index) => {
+      const canDelete = !!(
+        currentUser &&
+        (isCurrentUserAdmin || (item.authorUid && item.authorUid === currentUser.uid))
+      );
+      return `
       <article class="user-testimonial">
         <p>"${escapeHtml(item.comment || "")}"</p>
         <cite>- ${escapeHtml(item.name || "Anonymous")}</cite>
+        ${canDelete ? `
         <button
           type="button"
           class="testimonial-delete-btn"
           data-visible-index="${index}"
           aria-label="Delete this comment"
         >Delete</button>
+        ` : ""}
       </article>
-    `)
+    `;
+    })
     .join("");
 
   testimonialListMeta.textContent = total
@@ -792,7 +825,12 @@ testimonialForm?.addEventListener("submit", async (event) => {
 
   if (!db) {
     const items = JSON.parse(localStorage.getItem(TESTIMONIAL_KEY) || "[]");
-    items.unshift({ name: cleanName, comment: cleanComment, createdAt: Date.now() });
+    items.unshift({
+      name: cleanName,
+      comment: cleanComment,
+      authorUid: currentUser?.uid || "",
+      createdAt: Date.now()
+    });
     localStorage.setItem(TESTIMONIAL_KEY, JSON.stringify(items.slice(0, TESTIMONIAL_LOCAL_MAX)));
     testimonialForm.reset();
     renderTestimonialsLocal();
@@ -807,6 +845,7 @@ testimonialForm?.addEventListener("submit", async (event) => {
         id: `local-${optimisticNow}`,
         name: cleanName,
         comment: cleanComment,
+        authorUid: currentUser?.uid || "",
         createdAt: 0,
         createdAtClient: optimisticNow
       },
@@ -818,6 +857,8 @@ testimonialForm?.addEventListener("submit", async (event) => {
     await addDoc(collection(db, TESTIMONIAL_COLLECTION), {
       name: cleanName,
       comment: cleanComment,
+      authorUid: currentUser?.uid || "",
+      authorEmail: currentUser?.email || "",
       createdAt: serverTimestamp(),
       createdAtClient: Date.now()
     });
@@ -826,7 +867,12 @@ testimonialForm?.addEventListener("submit", async (event) => {
   } catch (error) {
     console.warn("Could not post testimonial to Firestore. Using local storage.", error);
     const items = JSON.parse(localStorage.getItem(TESTIMONIAL_KEY) || "[]");
-    items.unshift({ name: cleanName, comment: cleanComment, createdAt: Date.now() });
+    items.unshift({
+      name: cleanName,
+      comment: cleanComment,
+      authorUid: currentUser?.uid || "",
+      createdAt: Date.now()
+    });
     localStorage.setItem(TESTIMONIAL_KEY, JSON.stringify(items.slice(0, TESTIMONIAL_LOCAL_MAX)));
     testimonialForm.reset();
     renderTestimonialsLocal();

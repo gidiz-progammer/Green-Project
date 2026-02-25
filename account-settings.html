@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Settings | Green World</title>
+  <style>
+    :root {
+      --brand: #0b7d69;
+      --brand-dark: #065a4b;
+      --bg: #eef7f4;
+      --line: #cfe5de;
+      --text: #0f3d34;
+      --danger: #b42318;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    header {
+      background: linear-gradient(120deg, var(--brand-dark), var(--brand));
+      color: #fff;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+    nav { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      padding: 0.4rem 0.7rem;
+      border-radius: 8px;
+    }
+    nav a:hover, nav a.active { background: rgba(255, 255, 255, 0.18); }
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1rem;
+      display: grid;
+      gap: 1rem;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 8px 18px rgba(6, 90, 75, 0.1);
+    }
+    h1, h2 { margin-top: 0; }
+    label {
+      display: block;
+      font-weight: 700;
+      margin-top: 0.7rem;
+      margin-bottom: 0.25rem;
+    }
+    input {
+      width: 100%;
+      padding: 0.62rem 0.72rem;
+      border: 1px solid #b7d7cd;
+      border-radius: 8px;
+      font: inherit;
+    }
+    .actions {
+      margin-top: 0.8rem;
+      display: flex;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+    }
+    button {
+      border: none;
+      border-radius: 9px;
+      padding: 0.68rem 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .primary { background: var(--brand); color: #fff; }
+    .secondary { background: #edf9f5; border: 1px solid #b7d7cd; color: #165d50; }
+    .danger { background: var(--danger); color: #fff; }
+    .status {
+      min-height: 1.2rem;
+      font-weight: 700;
+      margin-top: 0.55rem;
+    }
+    .ok { color: #0f7a2d; }
+    .err { color: #b42318; }
+    .muted { color: #3f7166; }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>Green World Account Settings</strong>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="productpage.html">Products</a>
+      <a href="cart.html">Cart</a>
+      <a href="account-settings.html" class="active">Account</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="card">
+      <h1>Account Overview</h1>
+      <p class="muted" id="accountSummary">Loading account...</p>
+      <div class="actions">
+        <button id="sendVerifyBtn" class="secondary" type="button">Send Verification Email</button>
+        <button id="logoutBtn" class="secondary" type="button">Logout</button>
+      </div>
+      <p id="overviewStatus" class="status"></p>
+    </section>
+
+    <section class="card">
+      <h2>Change Email</h2>
+      <label for="newEmail">New Email</label>
+      <input id="newEmail" type="email" placeholder="newemail@example.com">
+      <label for="emailPassword">Current Password</label>
+      <input id="emailPassword" type="password" placeholder="Current password">
+      <div class="actions">
+        <button id="changeEmailBtn" class="primary" type="button">Update Email</button>
+      </div>
+      <p id="emailStatus" class="status"></p>
+    </section>
+
+    <section class="card">
+      <h2>Change Password</h2>
+      <label for="currentPassword">Current Password</label>
+      <input id="currentPassword" type="password" placeholder="Current password">
+      <label for="newPassword">New Password</label>
+      <input id="newPassword" type="password" placeholder="New password">
+      <label for="confirmNewPassword">Confirm New Password</label>
+      <input id="confirmNewPassword" type="password" placeholder="Confirm new password">
+      <div class="actions">
+        <button id="changePasswordBtn" class="primary" type="button">Update Password</button>
+      </div>
+      <p id="passwordStatus" class="status"></p>
+    </section>
+
+    <section class="card">
+      <h2>Delete Account</h2>
+      <p class="muted">This action is permanent. Your login account will be removed.</p>
+      <label for="deletePassword">Current Password</label>
+      <input id="deletePassword" type="password" placeholder="Current password">
+      <div class="actions">
+        <button id="deleteAccountBtn" class="danger" type="button">Delete My Account</button>
+      </div>
+      <p id="deleteStatus" class="status"></p>
+    </section>
+  </main>
+
+  <script type="module">
+    import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app-check.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut,
+      sendEmailVerification,
+      EmailAuthProvider,
+      reauthenticateWithCredential,
+      verifyBeforeUpdateEmail,
+      updatePassword,
+      deleteUser
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBnpg1zVQr2-mEPwet80zNExFaPEjls4Hc",
+      authDomain: "green-world-project.firebaseapp.com",
+      projectId: "green-world-project",
+      storageBucket: "green-world-project.firebasestorage.app",
+      messagingSenderId: "1096759081626",
+      appId: "1:1096759081626:web:1f15a558d2bfcad1b7bd23"
+    };
+
+    const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const APP_CHECK_SITE_KEY = window.__APP_CHECK_SITE_KEY__ || "";
+    if (APP_CHECK_SITE_KEY) {
+      initializeAppCheck(app, {
+        provider: new ReCaptchaV3Provider(APP_CHECK_SITE_KEY),
+        isTokenAutoRefreshEnabled: true
+      });
+    }
+
+    const accountSummary = document.getElementById("accountSummary");
+    const overviewStatus = document.getElementById("overviewStatus");
+    const emailStatus = document.getElementById("emailStatus");
+    const passwordStatus = document.getElementById("passwordStatus");
+    const deleteStatus = document.getElementById("deleteStatus");
+
+    let currentUser = null;
+
+    function showStatus(target, message, ok = false) {
+      target.textContent = message;
+      target.className = `status ${ok ? "ok" : "err"}`;
+    }
+
+    function getCredential(password) {
+      return EmailAuthProvider.credential(currentUser.email, password);
+    }
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "loginpage.html";
+        return;
+      }
+      currentUser = user;
+      accountSummary.textContent = `Signed in as: ${user.email} | Email Verified: ${user.emailVerified ? "Yes" : "No"}`;
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      await signOut(auth);
+      window.location.href = "loginpage.html";
+    });
+
+    document.getElementById("sendVerifyBtn").addEventListener("click", async () => {
+      if (!currentUser) return;
+      if (currentUser.emailVerified) {
+        showStatus(overviewStatus, "Email is already verified.", true);
+        return;
+      }
+      try {
+        await sendEmailVerification(currentUser);
+        showStatus(overviewStatus, "Verification email sent.", true);
+      } catch (error) {
+        showStatus(overviewStatus, error.message || "Could not send verification email.");
+      }
+    });
+
+    document.getElementById("changeEmailBtn").addEventListener("click", async () => {
+      emailStatus.textContent = "";
+      if (!currentUser) return;
+      const newEmail = document.getElementById("newEmail").value.trim();
+      const currentPassword = document.getElementById("emailPassword").value;
+      if (!newEmail || !currentPassword) {
+        showStatus(emailStatus, "Enter new email and current password.");
+        return;
+      }
+      try {
+        await reauthenticateWithCredential(currentUser, getCredential(currentPassword));
+        await verifyBeforeUpdateEmail(currentUser, newEmail);
+        await signOut(auth);
+        showStatus(emailStatus, "Verification link sent to new email. Login again after verifying.", true);
+        setTimeout(() => {
+          window.location.href = "loginpage.html";
+        }, 1800);
+      } catch (error) {
+        showStatus(emailStatus, error.message || "Could not update email.");
+      }
+    });
+
+    document.getElementById("changePasswordBtn").addEventListener("click", async () => {
+      passwordStatus.textContent = "";
+      if (!currentUser) return;
+      const currentPassword = document.getElementById("currentPassword").value;
+      const newPassword = document.getElementById("newPassword").value;
+      const confirmNewPassword = document.getElementById("confirmNewPassword").value;
+      if (!currentPassword || !newPassword || !confirmNewPassword) {
+        showStatus(passwordStatus, "Fill all password fields.");
+        return;
+      }
+      if (newPassword !== confirmNewPassword) {
+        showStatus(passwordStatus, "New passwords do not match.");
+        return;
+      }
+      if (newPassword.length < 8) {
+        showStatus(passwordStatus, "New password must be at least 8 characters.");
+        return;
+      }
+      try {
+        await reauthenticateWithCredential(currentUser, getCredential(currentPassword));
+        await updatePassword(currentUser, newPassword);
+        showStatus(passwordStatus, "Password updated successfully.", true);
+      } catch (error) {
+        showStatus(passwordStatus, error.message || "Could not update password.");
+      }
+    });
+
+    document.getElementById("deleteAccountBtn").addEventListener("click", async () => {
+      deleteStatus.textContent = "";
+      if (!currentUser) return;
+      const password = document.getElementById("deletePassword").value;
+      if (!password) {
+        showStatus(deleteStatus, "Enter current password to continue.");
+        return;
+      }
+      const confirmDelete = window.confirm("Delete account permanently?");
+      if (!confirmDelete) return;
+      try {
+        await reauthenticateWithCredential(currentUser, getCredential(password));
+        await deleteUser(currentUser);
+        showStatus(deleteStatus, "Account deleted successfully.", true);
+        setTimeout(() => {
+          window.location.href = "createaccount page.html";
+        }, 1200);
+      } catch (error) {
+        showStatus(deleteStatus, error.message || "Could not delete account.");
+      }
+    });
+  </script>
+</body>
+</html>
