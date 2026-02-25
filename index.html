@@ -420,6 +420,9 @@ let auth;
 let db;
 let currentUser = null;
 let isCurrentUserAdmin = false;
+const ADMIN_EMAIL_ALLOWLIST = new Set([
+  "onigordon157@gmail.com"
+]);
 
 try {
   app = getApps().length ? getApp() : initializeApp(firebaseConfig);
@@ -453,6 +456,10 @@ if (auth) {
         isCurrentUserAdmin = adminSnap.exists() && adminSnap.data()?.active === true;
       } catch {
         isCurrentUserAdmin = false;
+      }
+      if (!isCurrentUserAdmin) {
+        const normalizedEmail = String(user.email || "").trim().toLowerCase();
+        isCurrentUserAdmin = ADMIN_EMAIL_ALLOWLIST.has(normalizedEmail);
       }
       renderTestimonials();
       document.body.style.display = "block";
@@ -886,5 +893,4 @@ startTestimonialsSync();
 
 </body>
 </html>
-
 

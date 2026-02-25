@@ -9,10 +9,19 @@ service cloud.firestore {
       return signedIn() && request.auth.uid == uid;
     }
 
-    function isAdmin() {
+    function hasAllowlistedAdminEmail() {
       return signedIn()
-        && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
-        && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.active == true;
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in ["onigordon157@gmail.com"];
+    }
+
+    function isAdmin() {
+      return hasAllowlistedAdminEmail()
+        || (
+          signedIn()
+          && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+          && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.active == true
+        );
     }
 
     match /admins/{uid} {

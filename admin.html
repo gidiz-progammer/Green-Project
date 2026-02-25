@@ -77,6 +77,9 @@
     };
 
     const PRODUCT_OVERRIDE_COLLECTION = "product_overrides";
+    const ADMIN_EMAIL_ALLOWLIST = new Set([
+      "onigordon157@gmail.com"
+    ]);
     const PRODUCT_NAMES = [
       "Balsam Pear Tablet",
       "Green World Balsam Pear Tea (20 Sachets)",
@@ -218,6 +221,10 @@
         canAccess = adminSnap.exists() && adminSnap.data()?.active === true;
       } catch (error) {
         console.warn("Could not verify admin role.", error);
+      }
+      if (!canAccess) {
+        const normalizedEmail = String(user.email || "").trim().toLowerCase();
+        canAccess = ADMIN_EMAIL_ALLOWLIST.has(normalizedEmail);
       }
 
       if (!canAccess) {
