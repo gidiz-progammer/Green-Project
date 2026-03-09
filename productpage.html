@@ -348,7 +348,7 @@
       <a href="aboutpage.html">About</a>
       <a href="contactpage.html">Contact</a>
       <a href="faq.html">FAQ</a>
-      <a href="admin.html">Admin</a>
+      <a id="adminNavLink" href="admin.html" style="display:none;">Admin</a>
     </nav>
   </header>
 
@@ -462,13 +462,21 @@
     let toastTimer = null;
     let syncTimer = null;
     let currentUser = null;
+    let isCurrentUserAdmin = false;
     let activeCategory = "all";
     let activeSort = "default";
     let activeSearch = "";
+    const ONLY_ADMIN_EMAIL = "onigordon157@gmail.com";
 
     const openCartBtn = document.getElementById("openCartBtn");
     const cartCountBadge = document.getElementById("cartCountBadge");
     const cartToast = document.getElementById("cartToast");
+    const adminNavLink = document.getElementById("adminNavLink");
+
+    function setAdminLinkVisible(isVisible) {
+      if (!adminNavLink) return;
+      adminNavLink.style.display = isVisible ? "" : "none";
+    }
 
     const categoryByName = [
       { test: /women|kidney/i, category: "women", tag: "Women Care" },
@@ -725,6 +733,9 @@
         window.location.href = "loginpage.html";
         return;
       }
+      const normalizedEmail = String(user.email || "").trim().toLowerCase();
+      isCurrentUserAdmin = normalizedEmail === ONLY_ADMIN_EMAIL;
+      setAdminLinkVisible(isCurrentUserAdmin);
       await hydrateRemoteCart();
     });
 

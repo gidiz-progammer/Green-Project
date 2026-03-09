@@ -33,7 +33,7 @@
     <a href="./aboutpage.html" style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; transition:color 0.3s ease;">About</a>
     <a href="./contactpage.html" style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; transition:color 0.3s ease;">Contact</a>
     <a href="./faq.html" style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; transition:color 0.3s ease;">FAQ</a>
-    <a href="./admin.html" style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; transition:color 0.3s ease;">Admin</a>
+    <a id="adminNavLink" href="./admin.html" style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; transition:color 0.3s ease; display:none;">Admin</a>
     <a href="./account-settings.html" style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; transition:color 0.3s ease;">Account</a>
     <a href="#" onclick="logout(); return false;" style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; transition:color 0.3s ease;">Logout</a>
         <!-- <button style="color:#b2dfdb; text-decoration:none; margin-left:1.5rem; font-weight:600; font-size: 18px; transition:color 0.3s ease;border: thin solid #00796b; background-color: #00796b;" onclick="logout()"><a href="">Logout</a></button> -->
@@ -380,7 +380,7 @@
     <a href="./terms-conditions.html" style="color:#b2dfdb; text-decoration:none; margin:0 8px;">Terms</a>
     <a href="./delivery-returns.html" style="color:#b2dfdb; text-decoration:none; margin:0 8px;">Delivery & Returns</a>
     <a href="./faq.html" style="color:#b2dfdb; text-decoration:none; margin:0 8px;">FAQ</a>
-    <a href="./admin.html" style="color:#b2dfdb; text-decoration:none; margin:0 8px;">Admin</a>
+    <a id="adminFooterLink" href="./admin.html" style="color:#b2dfdb; text-decoration:none; margin:0 8px; display:none;">Admin</a>
   </footer>
 
 
@@ -396,7 +396,6 @@ import {
   getFirestore,
   collection,
   doc,
-  getDoc,
   addDoc,
   deleteDoc,
   query,
@@ -420,9 +419,7 @@ let auth;
 let db;
 let currentUser = null;
 let isCurrentUserAdmin = false;
-const ADMIN_EMAIL_ALLOWLIST = new Set([
-  "onigordon157@gmail.com"
-]);
+const ONLY_ADMIN_EMAIL = "onigordon157@gmail.com";
 
 try {
   app = getApps().length ? getApp() : initializeApp(firebaseConfig);
@@ -451,16 +448,9 @@ if (auth) {
         return;
       }
       currentUser = user;
-      try {
-        const adminSnap = await getDoc(doc(db, "admins", user.uid));
-        isCurrentUserAdmin = adminSnap.exists() && adminSnap.data()?.active === true;
-      } catch {
-        isCurrentUserAdmin = false;
-      }
-      if (!isCurrentUserAdmin) {
-        const normalizedEmail = String(user.email || "").trim().toLowerCase();
-        isCurrentUserAdmin = ADMIN_EMAIL_ALLOWLIST.has(normalizedEmail);
-      }
+      const normalizedEmail = String(user.email || "").trim().toLowerCase();
+      isCurrentUserAdmin = normalizedEmail === ONLY_ADMIN_EMAIL;
+      setAdminLinksVisible(isCurrentUserAdmin);
       renderTestimonials();
       document.body.style.display = "block";
     }
@@ -480,6 +470,8 @@ const testimonialList = document.getElementById("testimonialList");
 const testimonialStatus = document.getElementById("testimonialStatus");
 const testimonialListMeta = document.getElementById("testimonialListMeta");
 const testimonialToggleBtn = document.getElementById("testimonialToggleBtn");
+const adminNavLink = document.getElementById("adminNavLink");
+const adminFooterLink = document.getElementById("adminFooterLink");
 const TESTIMONIAL_KEY = "green_world_testimonials";
 const TESTIMONIAL_COLLECTION = "testimonials";
 const TESTIMONIAL_PAGE_SIZE = 6;
@@ -509,6 +501,12 @@ const deliveryEstimatorResult = document.getElementById("deliveryEstimatorResult
 const newTipBtn = document.getElementById("newTipBtn");
 const dailyTipText = document.getElementById("dailyTipText");
 const labWhatsAppBtn = document.getElementById("labWhatsAppBtn");
+
+function setAdminLinksVisible(isVisible) {
+  const displayValue = isVisible ? "" : "none";
+  if (adminNavLink) adminNavLink.style.display = displayValue;
+  if (adminFooterLink) adminFooterLink.style.display = displayValue;
+}
 
 const wellnessCombos = {
   sugar: {
@@ -893,4 +891,3 @@ startTestimonialsSync();
 
 </body>
 </html>
-
